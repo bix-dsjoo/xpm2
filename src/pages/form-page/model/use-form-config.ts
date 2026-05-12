@@ -24,6 +24,7 @@ export const userFormConfig = {
       type: "input",
       inputType: "email",
       placeholder: "user@example.com",
+      description: "사용자 어쩌구 입니다",
     },
     {
       name: "role",
@@ -38,8 +39,7 @@ export const userFormConfig = {
     {
       name: "active",
       label: "활성 상태",
-      legend: "사용자 계정 상태",
-      type: "checkbox",
+      type: "switch",
       description: "체크하면 사용자가 활성화됩니다.",
     },
   ],

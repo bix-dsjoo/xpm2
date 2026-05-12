@@ -1,17 +1,14 @@
 import { Button } from "@/base/ui/button"
 import {
   Field,
+  FieldContent,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldLegend,
-  FieldSeparator,
-  FieldSet,
 } from "@/base/ui/field"
 import { useForm } from "@tanstack/react-form"
 import type { FormConfig } from "../model/types"
-import { Checkbox } from "@/base/ui/checkbox"
 import { Input } from "@/base/ui/input"
 import {
   Select,
@@ -22,6 +19,8 @@ import {
   SelectValue,
 } from "@/base/ui/select"
 import { Textarea } from "@/base/ui/textarea"
+import { useId } from "react"
+import { Switch } from "@/base/ui/switch"
 
 type FormProps<TValues extends Record<string, unknown>> = {
   config: FormConfig<TValues>
@@ -34,6 +33,8 @@ export const Form = <TValues extends Record<string, unknown>>({
   initialValues,
   onSubmit,
 }: FormProps<TValues>) => {
+  const formId = useId()
+
   const defaultValues: TValues = {
     ...config.defaultValues,
     ...initialValues,
@@ -53,81 +54,47 @@ export const Form = <TValues extends Record<string, unknown>>({
 
   return (
     <form
+      className="w-full sm:max-w-lg"
       onSubmit={(event) => {
         event.preventDefault()
         event.stopPropagation()
-        form.handleSubmit()
+        void form.handleSubmit()
       }}
     >
       <FieldGroup>
-        {config.fields.map((fieldConfig, index) => (
+        {config.fields.map((fieldConfig) => (
           <form.Field
             key={fieldConfig.name}
             name={fieldConfig.name}
             children={(field) => {
-              const fieldId = `${field.name}-field`
+              const fieldId = `${formId}${field.name}`
               const isInvalid =
                 field.state.meta.isTouched && !field.state.meta.isValid
 
-              if (fieldConfig.type === "checkbox")
-                return (
-                  <>
-                    <div>
-                      <FieldSet>
-                        <FieldLegend variant="label">
-                          {fieldConfig.legend}
-                        </FieldLegend>
-                        {fieldConfig.description && (
-                          <FieldDescription>
-                            {fieldConfig.description}
-                          </FieldDescription>
-                        )}
-                        <FieldGroup data-slot="checkbox-group">
-                          <Field
-                            orientation="horizontal"
-                            data-invalid={isInvalid}
-                          >
-                            <Checkbox
-                              id={fieldId}
-                              name={field.name}
-                              checked={field.state.value as boolean}
-                              onCheckedChange={(checked) =>
-                                field.handleChange((checked === true) as never)
-                              }
-                            />
-                            <FieldLabel
-                              htmlFor={fieldId}
-                              className="font-normal"
-                            >
-                              {fieldConfig.label}
-                            </FieldLabel>
-                          </Field>
-                        </FieldGroup>
-                      </FieldSet>
+              return (
+                <>
+                  <Field data-invalid={isInvalid} orientation="responsive">
+                    <FieldContent>
+                      <FieldLabel htmlFor={fieldId}>
+                        {fieldConfig.label}
+                      </FieldLabel>
+                      {fieldConfig.description && (
+                        <FieldDescription>
+                          {fieldConfig.description}
+                        </FieldDescription>
+                      )}
                       {isInvalid && (
                         <FieldError errors={field.state.meta.errors} />
                       )}
-                    </div>
-                    {index < config.fields.length - 1 && <FieldSeparator />}
-                  </>
-                )
-
-              return (
-                <>
-                  <Field data-invalid={isInvalid} orientation="vertical">
-                    <FieldLabel htmlFor={fieldId}>
-                      {fieldConfig.label}
-                    </FieldLabel>
+                    </FieldContent>
                     {fieldConfig.type === "input" && (
                       <Input
                         id={fieldId}
                         name={field.name}
-                        type={fieldConfig.inputType ?? "text"}
-                        value={field.state.value as string}
+                        type={fieldConfig.inputType}
+                        value={field.state.value}
                         onBlur={field.handleBlur}
-                        onChange={(e) =>
-                          field.handleChange(e.target.value as never)
-                        }
+                        onChange={(e) => field.handleChange(e.target.value)}
                         aria-invalid={isInvalid}
                         placeholder={fieldConfig.placeholder}
                       />
@@ -136,12 +103,10 @@ export const Form = <TValues extends Record<string, unknown>>({
                       <Textarea
                         id={fieldId}
                         name={field.name}
-                        value={field.state.value as string}
+                        value={field.state.value}
                         rows={fieldConfig.rows}
                         onBlur={field.handleBlur}
-                        onChange={(e) =>
-                          field.handleChange(e.target.value as never)
-                        }
+                        onChange={(e) => field.handleChange(e.target.value)}
                         aria-invalid={isInvalid}
                         placeholder={fieldConfig.placeholder}
                       />
@@ -149,14 +114,13 @@ export const Form = <TValues extends Record<string, unknown>>({
                     {fieldConfig.type === "select" && (
                       <Select
                         items={fieldConfig.options}
-                        value={field.state.value as string}
-                        onValueChange={(value) =>
-                          field.handleChange(value as never)
-                        }
+                        value={field.state.value}
+                        onValueChange={(value) => field.handleChange(value)}
                       >
                         <SelectTrigger
                           id={fieldId}
                           className="w-full"
+                          onBlur={field.handleBlur}
                           aria-invalid={isInvalid}
                         >
                           <SelectValue placeholder={fieldConfig.placeholder} />
@@ -175,13 +139,15 @@ export const Form = <TValues extends Record<string, unknown>>({
                         </SelectContent>
                       </Select>
                     )}
-                    {fieldConfig.description && (
-                      <FieldDescription>
-                        {fieldConfig.description}
-                      </FieldDescription>
-                    )}
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
+                    {fieldConfig.type === "switch" && (
+                      <Switch
+                        id={fieldId}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        aria-invalid={isInvalid}
+                      />
                     )}
                   </Field>
                 </>

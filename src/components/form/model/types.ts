@@ -36,7 +36,6 @@ export type BaseFieldConfig<
   name: TName
   label: string
   placeholder?: string
-  legend?: string
   description?: string
 }
 export type InputFieldConfig<
@@ -70,5 +69,5 @@ export type CheckboxFieldConfig<
   TValues extends Record<string, unknown>,
   TName extends FieldName<TValues> = BooleanFieldName<TValues>,
 > = BaseFieldConfig<TValues, TName> & {
-  type: "checkbox"
+  type: "switch"
 }
