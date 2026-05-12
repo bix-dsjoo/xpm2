@@ -43,6 +43,4 @@ export const userFormConfig = {
       description: "체크하면 사용자가 활성화됩니다.",
     },
   ],
-
-  submitLabel: "저장",
 } satisfies FormConfig<UserFormValues>

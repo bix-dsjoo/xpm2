@@ -4,7 +4,6 @@ export type FormConfig<TValues extends Record<string, unknown>> = {
   schema: z.ZodType<TValues, TValues>
   defaultValues: TValues
   fields: FieldConfig<TValues>[]
-  submitLabel?: string
 }
 
 type FieldName<TValues extends Record<string, unknown>> = keyof TValues & string
