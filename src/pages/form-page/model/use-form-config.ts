@@ -1,4 +1,4 @@
-import type { FormConfig } from "@/components/form"
+import type { FormConfig } from "@/components/config-form"
 import { paymentFormSchema, type PaymentFormValues } from "./payment-schema"
 
 const monthOptions = Array.from({ length: 12 }, (_, index) => {
