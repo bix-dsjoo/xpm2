@@ -182,7 +182,7 @@ export const Form = <TValues extends Record<string, unknown>>({
                   </SelectContent>
                 </Select>
               )}
-              {fieldConfig.description && (
+              {fieldConfig.description && !isInvalid && (
                 <FieldDescription>{fieldConfig.description}</FieldDescription>
               )}
               {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -262,9 +262,21 @@ export const Form = <TValues extends Record<string, unknown>>({
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
-            <Button type="submit" disabled={!canSubmit || isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit"}
-            </Button>
+            <Field orientation="horizontal">
+              <Button type="submit" disabled={!canSubmit || isSubmitting}>
+                {isSubmitting ? "Submitting..." : "Submit"}
+              </Button>
+              <Button
+                variant="outline"
+                type="reset"
+                onClick={(e) => {
+                  e.preventDefault()
+                  form.reset()
+                }}
+              >
+                Reset
+              </Button>
+            </Field>
           )}
         />
       </FieldGroup>
