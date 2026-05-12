@@ -211,32 +211,50 @@ export const Form = <TValues extends Record<string, unknown>>({
               {fieldSet.description && (
                 <FieldDescription>{fieldSet.description}</FieldDescription>
               )}
-              <FieldGroup>
-                {fieldSet.fieldGroups.map((fieldGroup, index) => {
-                  if ("layout" in fieldGroup) {
-                    return (
-                      <div
-                        className={`grid ${gridColumnClassName[fieldGroup.columns]} gap-4`}
-                        key={`${formId}grid_${index}`}
-                      >
-                        {fieldGroup.fields.map((fieldConfig, index) => (
-                          <FormField
-                            key={`${formId}field_${index}`}
-                            fieldConfig={fieldConfig}
-                          />
-                        ))}
-                      </div>
-                    )
-                  }
+              <form.Subscribe
+                selector={(state) => state.values}
+                children={(values) => (
+                  <FieldGroup>
+                    {fieldSet.fieldGroups.map((fieldGroup, index) => {
+                      if (fieldGroup.visibleWhen?.(values) === false) {
+                        return null
+                      }
 
-                  return (
-                    <FormField
-                      key={`${formId}field_${index}`}
-                      fieldConfig={fieldGroup}
-                    />
-                  )
-                })}
-              </FieldGroup>
+                      if ("layout" in fieldGroup) {
+                        const visibleFields = fieldGroup.fields.filter(
+                          (fieldConfig) =>
+                            fieldConfig.visibleWhen?.(values) !== false
+                        )
+
+                        if (visibleFields.length === 0) {
+                          return null
+                        }
+
+                        return (
+                          <div
+                            className={`grid ${gridColumnClassName[fieldGroup.columns]} gap-4`}
+                            key={`${formId}grid_${index}`}
+                          >
+                            {visibleFields.map((fieldConfig) => (
+                              <FormField
+                                key={`${formId}field_${fieldConfig.name}`}
+                                fieldConfig={fieldConfig}
+                              />
+                            ))}
+                          </div>
+                        )
+                      }
+
+                      return (
+                        <FormField
+                          key={`${formId}field_${fieldGroup.name}`}
+                          fieldConfig={fieldGroup}
+                        />
+                      )
+                    })}
+                  </FieldGroup>
+                )}
+              />
             </FieldSet>
           </Fragment>
         ))}

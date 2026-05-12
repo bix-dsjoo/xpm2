@@ -16,6 +16,7 @@ export type FieldGroupConfigs<TValues extends Record<string, unknown>> = {
   layout: "grid"
   columns: 2 | 3 | 4
   fields: FieldConfig<TValues>[]
+  visibleWhen?: (values: TValues) => boolean
 }
 
 type FieldName<TValues extends Record<string, unknown>> = keyof TValues & string
@@ -33,6 +34,7 @@ export type BaseFieldConfig<TValues extends Record<string, unknown>> = {
   placeholder?: string
   description?: string
   required?: boolean
+  visibleWhen?: (values: TValues) => boolean
 }
 
 export type InputFieldConfig<TValues extends Record<string, unknown>> =

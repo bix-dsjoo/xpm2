@@ -11,6 +11,8 @@ const yearOptions = ["2024", "2025", "2026", "2027", "2028", "2029"].map(
   (year) => ({ label: year, value: year })
 )
 
+const enabledOnly = (values: UserFormValues) => values.enabled === true
+
 export const userFormConfig = {
   schema: userFormSchema,
 
@@ -41,6 +43,7 @@ export const userFormConfig = {
           type: "input",
           placeholder: "Evil Rabbit",
           required: true,
+          visibleWhen: enabledOnly,
         },
         {
           name: "cardNumber",
@@ -49,10 +52,12 @@ export const userFormConfig = {
           placeholder: "1234 5678 9012 3456",
           description: "Enter your 16-digit card number",
           required: true,
+          visibleWhen: enabledOnly,
         },
         {
           layout: "grid",
           columns: 3,
+          visibleWhen: enabledOnly,
           fields: [
             {
               name: "expMonth",
