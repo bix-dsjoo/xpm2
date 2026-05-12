@@ -38,6 +38,7 @@ export const userFormConfig = {
     {
       name: "active",
       label: "활성 상태",
+      legend: "사용자 계정 상태",
       type: "checkbox",
       description: "체크하면 사용자가 활성화됩니다.",
     },

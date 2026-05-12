@@ -21,6 +21,7 @@ export type BaseFieldConfig<TValues extends Record<string, unknown>> = {
   name: FieldName<TValues>
   label: string
   placeholder?: string
+  legend?: string
   description?: string
 }
 export type InputFieldConfig<TValues extends Record<string, unknown>> =
