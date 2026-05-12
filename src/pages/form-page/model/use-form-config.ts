@@ -1,46 +1,94 @@
 import type { FormConfig } from "@/components/form"
 import { userFormSchema, type UserFormValues } from "./user-schema"
 
+const monthOptions = Array.from({ length: 12 }, (_, index) => {
+  const value = String(index + 1).padStart(2, "0")
+
+  return { label: value, value }
+})
+
+const yearOptions = ["2024", "2025", "2026", "2027", "2028", "2029"].map(
+  (year) => ({ label: year, value: year })
+)
+
 export const userFormConfig = {
   schema: userFormSchema,
 
   defaultValues: {
-    name: "",
-    email: "",
-    role: "user",
-    active: true,
+    cardName: "",
+    cardNumber: "",
+    expMonth: "",
+    expYear: "",
+    cvv: "",
+    sameAsShipping: true,
+    comments: "",
   },
 
-  fields: [
+  fieldSets: [
     {
-      name: "name",
-      label: "이름",
-      type: "input",
-      placeholder: "홍길동",
-    },
-    {
-      name: "email",
-      label: "이메일",
-      type: "input",
-      inputType: "email",
-      placeholder: "user@example.com",
-      description: "로그인 및 알림 수신에 사용할 이메일 주소입니다.",
-    },
-    {
-      name: "role",
-      label: "권한",
-      type: "select",
-      options: [
-        { label: "관리자", value: "admin" },
-        { label: "매니저", value: "manager" },
-        { label: "사용자", value: "user" },
+      legend: "Payment Method",
+      description: "All transactions are secure and encrypted",
+      fieldGroups: [
+        {
+          name: "cardName",
+          label: "Name on Card",
+          type: "input",
+          placeholder: "Evil Rabbit",
+          required: true,
+        },
+        {
+          name: "cardNumber",
+          label: "Card Number",
+          type: "input",
+          placeholder: "1234 5678 9012 3456",
+          description: "Enter your 16-digit card number",
+          required: true,
+        },
+        {
+          layout: "grid",
+          columns: 3,
+          fields: [
+            {
+              name: "expMonth",
+              label: "Month",
+              type: "select",
+              placeholder: "MM",
+              options: monthOptions,
+            },
+            {
+              name: "expYear",
+              label: "Year",
+              type: "select",
+              placeholder: "YYYY",
+              options: yearOptions,
+            },
+            {
+              name: "cvv",
+              label: "CVV",
+              type: "input",
+              placeholder: "123",
+              required: true,
+            },
+          ],
+        },
       ],
     },
     {
-      name: "active",
-      label: "활성 상태",
-      type: "switch",
-      description: "체크하면 사용자가 활성화됩니다.",
+      legend: "Billing Address",
+      description: "The billing address associated with your payment method",
+      fieldGroups: [
+        {
+          name: "sameAsShipping",
+          label: "Same as shipping address",
+          type: "checkbox",
+        },
+        {
+          name: "comments",
+          label: "Comments",
+          type: "textarea",
+          placeholder: "Add any additional comments",
+        },
+      ],
     },
   ],
 } satisfies FormConfig<UserFormValues>
