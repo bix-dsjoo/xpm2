@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const userFormSchema = z
+export const paymentFormSchema = z
   .object({
     enabled: z.boolean(),
     cardName: z.string(),
@@ -64,4 +64,4 @@ export const userFormSchema = z
     }
   })
 
-export type UserFormValues = z.infer<typeof userFormSchema>
+export type PaymentFormValues = z.infer<typeof paymentFormSchema>

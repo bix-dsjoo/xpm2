@@ -1,5 +1,5 @@
 import type { FormConfig } from "@/components/form"
-import { userFormSchema, type UserFormValues } from "./user-schema"
+import { paymentFormSchema, type PaymentFormValues } from "./payment-schema"
 
 const monthOptions = Array.from({ length: 12 }, (_, index) => {
   const value = String(index + 1).padStart(2, "0")
@@ -11,10 +11,10 @@ const yearOptions = ["2024", "2025", "2026", "2027", "2028", "2029"].map(
   (year) => ({ label: year, value: year })
 )
 
-const enabledOnly = (values: UserFormValues) => values.enabled === true
+const enabledOnly = (values: PaymentFormValues) => values.enabled === true
 
-export const userFormConfig = {
-  schema: userFormSchema,
+export const paymentFormConfig = {
+  schema: paymentFormSchema,
 
   defaultValues: {
     enabled: false,
@@ -102,4 +102,4 @@ export const userFormConfig = {
       ],
     },
   ],
-} satisfies FormConfig<UserFormValues>
+} satisfies FormConfig<PaymentFormValues>

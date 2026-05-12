@@ -95,7 +95,7 @@ export const Form = <TValues extends Record<string, unknown>>({
 
           if (fieldConfig.type === "switch") {
             return (
-              <Field orientation="responsive" data-invalid={isInvalid}>
+              <Field orientation="horizontal" data-invalid={isInvalid}>
                 <FieldContent>
                   <FieldLabel htmlFor={fieldId}>{fieldConfig.label}</FieldLabel>
                   {fieldConfig.description && (
