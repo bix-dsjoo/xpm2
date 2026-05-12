@@ -24,7 +24,7 @@ export const userFormConfig = {
       type: "input",
       inputType: "email",
       placeholder: "user@example.com",
-      description: "사용자 어쩌구 입니다",
+      description: "로그인 및 알림 수신에 사용할 이메일 주소입니다.",
     },
     {
       name: "role",
