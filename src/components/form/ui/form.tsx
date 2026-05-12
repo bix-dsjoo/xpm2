@@ -1,6 +1,8 @@
 import { Button } from "@/base/ui/button"
+import { Checkbox } from "@/base/ui/checkbox"
 import {
   Field,
+  FieldContent,
   FieldDescription,
   FieldError,
   FieldGroup,
@@ -9,8 +11,6 @@ import {
   FieldSeparator,
   FieldSet,
 } from "@/base/ui/field"
-import { useForm } from "@tanstack/react-form"
-import type { FieldConfig, FormConfig } from "../model/types"
 import { Input } from "@/base/ui/input"
 import {
   Select,
@@ -20,9 +20,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/base/ui/select"
+import { Switch } from "@/base/ui/switch"
 import { Textarea } from "@/base/ui/textarea"
+import { useForm } from "@tanstack/react-form"
 import { Fragment, useId } from "react"
-import { Checkbox } from "@/base/ui/checkbox"
+import type { FieldConfig, FormConfig } from "../model/types"
+
+const gridColumnClassName = {
+  2: "grid-cols-2",
+  3: "grid-cols-3",
+  4: "grid-cols-4",
+} as const
 
 type FormProps<TValues extends Record<string, unknown>> = {
   config: FormConfig<TValues>
@@ -80,6 +88,33 @@ export const Form = <TValues extends Record<string, unknown>>({
                 <FieldLabel htmlFor={fieldId} className="font-normal">
                   {fieldConfig.label}
                 </FieldLabel>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }
+
+          if (fieldConfig.type === "switch") {
+            return (
+              <Field orientation="responsive" data-invalid={isInvalid}>
+                <FieldContent>
+                  <FieldLabel htmlFor={fieldId}>{fieldConfig.label}</FieldLabel>
+                  {fieldConfig.description && (
+                    <FieldDescription>
+                      {fieldConfig.description}
+                    </FieldDescription>
+                  )}
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </FieldContent>
+                <Switch
+                  id={fieldId}
+                  name={field.name}
+                  checked={Boolean(value)}
+                  onCheckedChange={(checked) =>
+                    field.handleChange(Boolean(checked) as never)
+                  }
+                  onBlur={field.handleBlur}
+                  aria-invalid={isInvalid}
+                />
               </Field>
             )
           }
@@ -181,7 +216,7 @@ export const Form = <TValues extends Record<string, unknown>>({
                   if ("layout" in fieldGroup) {
                     return (
                       <div
-                        className={`grid grid-cols-${fieldGroup.columns} gap-4`}
+                        className={`grid ${gridColumnClassName[fieldGroup.columns]} gap-4`}
                         key={`${formId}grid_${index}`}
                       >
                         {fieldGroup.fields.map((fieldConfig, index) => (
@@ -210,7 +245,7 @@ export const Form = <TValues extends Record<string, unknown>>({
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
             <Button type="submit" disabled={!canSubmit || isSubmitting}>
-              {isSubmitting ? "저장 중..." : "저장"}
+              {isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           )}
         />

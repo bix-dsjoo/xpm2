@@ -15,6 +15,7 @@ export const userFormConfig = {
   schema: userFormSchema,
 
   defaultValues: {
+    enabled: false,
     cardName: "",
     cardNumber: "",
     expMonth: "",
@@ -29,6 +30,11 @@ export const userFormConfig = {
       legend: "Payment Method",
       description: "All transactions are secure and encrypted",
       fieldGroups: [
+        {
+          name: "enabled",
+          label: "Enabled",
+          type: "switch",
+        },
         {
           name: "cardName",
           label: "Name on Card",
