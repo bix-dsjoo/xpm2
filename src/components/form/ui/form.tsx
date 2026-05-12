@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/base/ui/select"
+import { Textarea } from "@/base/ui/textarea"
 
 type FormProps<TValues extends Record<string, unknown>> = {
   config: FormConfig<TValues>
@@ -33,18 +34,20 @@ export const Form = <TValues extends Record<string, unknown>>({
   initialValues,
   onSubmit,
 }: FormProps<TValues>) => {
+  const defaultValues: TValues = {
+    ...config.defaultValues,
+    ...initialValues,
+  }
+
   const form = useForm({
-    defaultValues: {
-      ...config.defaultValues,
-      ...initialValues,
-    } as TValues,
+    defaultValues,
 
     validators: {
       onSubmit: config.schema,
     },
 
     onSubmit: async ({ value }) => {
-      await onSubmit(value as TValues)
+      await onSubmit(value)
     },
   })
 
@@ -74,24 +77,26 @@ export const Form = <TValues extends Record<string, unknown>>({
                         <FieldLegend variant="label">
                           {fieldConfig.legend}
                         </FieldLegend>
-                        <FieldDescription>
-                          {fieldConfig.description}
-                        </FieldDescription>
+                        {fieldConfig.description && (
+                          <FieldDescription>
+                            {fieldConfig.description}
+                          </FieldDescription>
+                        )}
                         <FieldGroup data-slot="checkbox-group">
                           <Field
                             orientation="horizontal"
                             data-invalid={isInvalid}
                           >
                             <Checkbox
-                              id="form-tanstack-checkbox-responses"
+                              id={fieldId}
                               name={field.name}
-                              checked={field.state.value}
+                              checked={field.state.value as boolean}
                               onCheckedChange={(checked) =>
-                                field.handleChange(checked === true)
+                                field.handleChange((checked === true) as never)
                               }
                             />
                             <FieldLabel
-                              htmlFor="form-tanstack-checkbox-responses"
+                              htmlFor={fieldId}
                               className="font-normal"
                             >
                               {fieldConfig.label}
@@ -109,18 +114,34 @@ export const Form = <TValues extends Record<string, unknown>>({
 
               return (
                 <>
-                  <Field data-invalid={isInvalid} orientation={"vertical"}>
-                    <FieldLabel htmlFor="form-tanstack-input-username">
+                  <Field data-invalid={isInvalid} orientation="vertical">
+                    <FieldLabel htmlFor={fieldId}>
                       {fieldConfig.label}
                     </FieldLabel>
                     {fieldConfig.type === "input" && (
                       <Input
-                        id="form-tanstack-input-username"
+                        id={fieldId}
                         name={field.name}
                         type={fieldConfig.inputType ?? "text"}
-                        value={field.state.value}
+                        value={field.state.value as string}
                         onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
+                        onChange={(e) =>
+                          field.handleChange(e.target.value as never)
+                        }
+                        aria-invalid={isInvalid}
+                        placeholder={fieldConfig.placeholder}
+                      />
+                    )}
+                    {fieldConfig.type === "textarea" && (
+                      <Textarea
+                        id={fieldId}
+                        name={field.name}
+                        value={field.state.value as string}
+                        rows={fieldConfig.rows}
+                        onBlur={field.handleBlur}
+                        onChange={(e) =>
+                          field.handleChange(e.target.value as never)
+                        }
                         aria-invalid={isInvalid}
                         placeholder={fieldConfig.placeholder}
                       />
@@ -128,8 +149,10 @@ export const Form = <TValues extends Record<string, unknown>>({
                     {fieldConfig.type === "select" && (
                       <Select
                         items={fieldConfig.options}
-                        value={field.state.value}
-                        onValueChange={(value) => field.handleChange(value)}
+                        value={field.state.value as string}
+                        onValueChange={(value) =>
+                          field.handleChange(value as never)
+                        }
                       >
                         <SelectTrigger
                           id={fieldId}
@@ -152,14 +175,15 @@ export const Form = <TValues extends Record<string, unknown>>({
                         </SelectContent>
                       </Select>
                     )}
-                    <FieldDescription>
-                      {fieldConfig.description}
-                    </FieldDescription>
+                    {fieldConfig.description && (
+                      <FieldDescription>
+                        {fieldConfig.description}
+                      </FieldDescription>
+                    )}
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
                   </Field>
-                  {index < config.fields.length - 1 && <FieldSeparator />}
                 </>
               )
             }}
