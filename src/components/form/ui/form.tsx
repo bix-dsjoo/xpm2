@@ -93,28 +93,32 @@ export const Form = <TValues extends Record<string, unknown>>({
                         name={field.name}
                         type={fieldConfig.inputType}
                         value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
                         placeholder={fieldConfig.placeholder}
+                        onChange={(event) =>
+                          field.handleChange(event.target.value)
+                        }
+                        onBlur={field.handleBlur}
+                        aria-invalid={isInvalid}
                       />
                     )}
                     {fieldConfig.type === "textarea" && (
                       <Textarea
                         id={fieldId}
                         name={field.name}
-                        value={field.state.value}
                         rows={fieldConfig.rows}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
+                        value={field.state.value}
                         placeholder={fieldConfig.placeholder}
+                        onChange={(event) =>
+                          field.handleChange(event.target.value)
+                        }
+                        onBlur={field.handleBlur}
+                        aria-invalid={isInvalid}
                       />
                     )}
                     {fieldConfig.type === "select" && (
                       <Select
-                        items={fieldConfig.options}
                         value={field.state.value}
+                        items={fieldConfig.options}
                         onValueChange={(value) => field.handleChange(value)}
                       >
                         <SelectTrigger
@@ -143,9 +147,11 @@ export const Form = <TValues extends Record<string, unknown>>({
                       <Switch
                         id={fieldId}
                         name={field.name}
-                        value={field.state.value}
+                        checked={field.state.value}
+                        onCheckedChange={(checked) =>
+                          field.handleChange(checked)
+                        }
                         onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
                         aria-invalid={isInvalid}
                       />
                     )}
@@ -160,7 +166,7 @@ export const Form = <TValues extends Record<string, unknown>>({
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
             <Button type="submit" disabled={!canSubmit || isSubmitting}>
-              {isSubmitting ? "저장 중..." : (config.submitLabel ?? "저장")}
+              {isSubmitting ? "저장 중..." : "저장"}
             </Button>
           )}
         />
