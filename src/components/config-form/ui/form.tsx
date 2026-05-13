@@ -274,7 +274,7 @@ export const Form = <TValues extends Record<string, unknown>>({
                   form.reset()
                 }}
               >
-                Reset
+                Cancel
               </Button>
             </Field>
           )}
