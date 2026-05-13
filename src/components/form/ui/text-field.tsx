@@ -51,7 +51,9 @@ export function TextField({
         onChange={(event) => field.handleChange(event.target.value)}
       />
 
-      {description && <FieldDescription>{description}</FieldDescription>}
+      {description && !isInvalid && (
+        <FieldDescription>{description}</FieldDescription>
+      )}
 
       {isInvalid && <FieldError errors={field.state.meta.errors} />}
     </Field>
