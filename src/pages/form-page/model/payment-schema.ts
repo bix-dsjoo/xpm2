@@ -65,3 +65,14 @@ export const paymentFormSchema = z
   })
 
 export type PaymentFormValues = z.infer<typeof paymentFormSchema>
+
+export const PAYMENT_FORM_DEFAULT_VALUES = {
+  enabled: false,
+  cardName: "",
+  cardNumber: "",
+  expMonth: "",
+  expYear: "",
+  cvv: "",
+  sameAsShipping: true,
+  comments: "",
+}

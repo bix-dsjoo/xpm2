@@ -1,13 +1,17 @@
 import type { FormConfig } from "@/components/config-form"
-import { paymentFormSchema, type PaymentFormValues } from "./payment-schema"
+import {
+  PAYMENT_FORM_DEFAULT_VALUES,
+  paymentFormSchema,
+  type PaymentFormValues,
+} from "./payment-schema"
 
-const monthOptions = Array.from({ length: 12 }, (_, index) => {
+export const monthOptions = Array.from({ length: 12 }, (_, index) => {
   const value = String(index + 1).padStart(2, "0")
 
   return { label: value, value }
 })
 
-const yearOptions = ["2024", "2025", "2026", "2027", "2028", "2029"].map(
+export const yearOptions = ["2024", "2025", "2026", "2027", "2028", "2029"].map(
   (year) => ({ label: year, value: year })
 )
 
@@ -16,16 +20,7 @@ const enabledOnly = (values: PaymentFormValues) => values.enabled === true
 export const paymentFormConfig = {
   schema: paymentFormSchema,
 
-  defaultValues: {
-    enabled: false,
-    cardName: "",
-    cardNumber: "",
-    expMonth: "",
-    expYear: "",
-    cvv: "",
-    sameAsShipping: true,
-    comments: "",
-  },
+  defaultValues: PAYMENT_FORM_DEFAULT_VALUES,
 
   fieldSets: [
     {
