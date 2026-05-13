@@ -5,6 +5,7 @@ import {
   PAYMENT_FORM_DEFAULT_VALUES,
   paymentFormSchema,
 } from "../model/payment-schema"
+import { toast } from "sonner"
 
 export function CompositionFormPage() {
   const form = useAppForm({
@@ -14,8 +15,8 @@ export function CompositionFormPage() {
       onSubmit: paymentFormSchema,
     },
 
-    onSubmit: ({ value }) => {
-      console.log(value)
+    onSubmit: () => {
+      toast.success("Payment information saved.")
     },
   })
 
