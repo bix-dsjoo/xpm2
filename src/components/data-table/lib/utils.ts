@@ -7,6 +7,7 @@ import { Badge } from "@/base/ui/badge"
 import {
   DATA_TABLE_DEFAULT_ALIGN_BY_TYPE,
   DATA_TABLE_DEFAULT_DATE_FORMAT_OPTIONS,
+  DATA_TABLE_DEFAULT_DATE_TIME_FORMAT_OPTIONS,
   DATA_TABLE_DEFAULT_EMPTY_CELL_TEXT,
   DATA_TABLE_DEFAULT_FALSE_TEXT,
   DATA_TABLE_DEFAULT_LOCALE,
@@ -55,7 +56,13 @@ export function formatDataTableValue<TData>({
     case "date":
       return formatDate(value, {
         locale: column.locale,
-        dateFormatOptions: column.dateFormatOptions,
+        formatOptions: DATA_TABLE_DEFAULT_DATE_FORMAT_OPTIONS,
+      })
+
+    case "date-time":
+      return formatDate(value, {
+        locale: column.locale,
+        formatOptions: DATA_TABLE_DEFAULT_DATE_TIME_FORMAT_OPTIONS,
       })
 
     case "boolean":
@@ -90,7 +97,7 @@ function formatDate(
   value: unknown,
   options: {
     locale?: string
-    dateFormatOptions?: Intl.DateTimeFormatOptions
+    formatOptions: Intl.DateTimeFormatOptions
   }
 ) {
   const dateValue = parseDateValue(value)
@@ -101,7 +108,7 @@ function formatDate(
 
   return new Intl.DateTimeFormat(
     options.locale ?? DATA_TABLE_DEFAULT_LOCALE,
-    options.dateFormatOptions ?? DATA_TABLE_DEFAULT_DATE_FORMAT_OPTIONS
+    options.formatOptions
   ).format(dateValue)
 }
 

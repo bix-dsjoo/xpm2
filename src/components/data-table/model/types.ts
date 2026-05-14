@@ -6,6 +6,7 @@ export type DataTableColumnType =
   | "text"
   | "number"
   | "date"
+  | "date-time"
   | "boolean"
   | "option"
   | "array"
@@ -26,14 +27,9 @@ export type DataTableColumn<TData> = {
   contentClassName?: string
 
   /**
-   * number/date 전용
+   * number/date/date-time 전용
    */
   locale?: string
-
-  /**
-   * date 전용
-   */
-  dateFormatOptions?: Intl.DateTimeFormatOptions
 
   /**
    * boolean 전용

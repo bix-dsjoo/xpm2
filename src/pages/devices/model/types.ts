@@ -7,6 +7,7 @@ export type Device = {
   complianceStatus: DeviceComplianceStatus
   deviceState: DeviceState
   connectionStatus: DeviceConnectionStatus
+  lastConnectionStatusChange: string
   groups: string[]
   groupPaths: string[]
   activeProtocol: string

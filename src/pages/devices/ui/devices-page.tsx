@@ -38,6 +38,11 @@ const deviceColumns = [
     options: DEVICE_CONNECTION_STATUS_OPTIONS,
   },
   {
+    key: "lastConnectionStatusChange",
+    header: "LAST CONNECTION STATUS CHANGE",
+    type: "date-time",
+  },
+  {
     key: "activeIpAddress",
     header: "ACTIVE IP ADDRESS",
   },
