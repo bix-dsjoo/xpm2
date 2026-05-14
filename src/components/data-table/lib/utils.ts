@@ -11,7 +11,6 @@ import {
   DATA_TABLE_DEFAULT_FALSE_TEXT,
   DATA_TABLE_DEFAULT_LOCALE,
   DATA_TABLE_DEFAULT_TRUE_TEXT,
-  DATA_TABLE_OPTION_BADGE_CLASS,
 } from "../config/constants"
 import type {
   DataTableAlign,
@@ -144,10 +143,7 @@ function formatOption(value: unknown, options?: Option[]) {
   return createElement(
     Badge,
     {
-      variant: "secondary",
-      className: option?.color
-        ? DATA_TABLE_OPTION_BADGE_CLASS[option.color]
-        : undefined,
+      variant: option?.variant ?? "secondary",
     },
     option?.label ?? stringValue
   )

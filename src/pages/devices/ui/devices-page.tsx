@@ -2,8 +2,9 @@ import { DataTable, type DataTableColumn } from "@/components/data-table"
 
 import { useDevicesQuery } from "../model/queries"
 import {
+  DEVICE_COMPLIANCE_STATUS_OPTIONS,
+  DEVICE_CONNECTION_STATUS_OPTIONS,
   DEVICE_STATE_OPTIONS,
-  deviceConnectionStatusOptions,
   type Device,
 } from "../model/types"
 import { ChartPieDonut } from "./devices-page-chart-pie-donut"
@@ -19,31 +20,22 @@ const deviceColumns = [
     header: "DEVICE TYPE",
   },
   {
+    key: "complianceStatus",
+    header: "COMPLIANCE STATUS",
+    type: "option",
+    options: DEVICE_COMPLIANCE_STATUS_OPTIONS,
+  },
+  {
     key: "deviceState",
     header: "DEVICE STATE",
     type: "option",
     options: DEVICE_STATE_OPTIONS,
   },
   {
-    key: "deviceConnectionStatus",
-    header: "DEVICE CONNECTION STATUS",
+    key: "connectionStatus",
+    header: "CONNECTION STATUS",
     type: "option",
-    options: deviceConnectionStatusOptions,
-  },
-  {
-    key: "isManaged",
-    header: "MANAGED",
-    type: "boolean",
-  },
-  {
-    key: "alertCount",
-    header: "ALERTS",
-    type: "number",
-  },
-  {
-    key: "lastConnectedAt",
-    header: "LAST CONNECTED",
-    type: "date",
+    options: DEVICE_CONNECTION_STATUS_OPTIONS,
   },
   {
     key: "activeIpAddress",
@@ -94,7 +86,7 @@ export const DevicesPage = () => {
         columns={deviceColumns}
         data={devices}
         loading={isFetching}
-        getRowId={(row) => row.id}
+        getRowId={(row) => row.deviceId}
       />
     </main>
   )
