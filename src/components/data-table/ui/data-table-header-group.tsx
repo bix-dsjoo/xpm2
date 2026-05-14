@@ -1,0 +1,39 @@
+import { flexRender, type HeaderGroup } from "@tanstack/react-table"
+
+import { TableHead, TableRow } from "@/base/ui/table"
+import { cn } from "@/base/lib/utils"
+
+import { DATA_TABLE_TEXT_ALIGN_CLASS } from "../config/data-table-constants"
+import { getColumnMeta } from "../lib/data-table-utils"
+
+type DataTableHeaderGroupProps<TData> = {
+  headerGroup: HeaderGroup<TData>
+}
+
+export function DataTableHeaderGroup<TData>({
+  headerGroup,
+}: DataTableHeaderGroupProps<TData>) {
+  return (
+    <TableRow>
+      {headerGroup.headers.map((header) => {
+        const meta = getColumnMeta(header.column.columnDef)
+        const align = meta?.align ?? "left"
+
+        return (
+          <TableHead
+            key={header.id}
+            colSpan={header.colSpan}
+            className={cn(
+              DATA_TABLE_TEXT_ALIGN_CLASS[align],
+              meta?.headerClassName
+            )}
+          >
+            {header.isPlaceholder
+              ? null
+              : flexRender(header.column.columnDef.header, header.getContext())}
+          </TableHead>
+        )
+      })}
+    </TableRow>
+  )
+}
