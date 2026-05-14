@@ -24,7 +24,7 @@ export function TextField({
   placeholder,
   autoComplete,
 }: TextFieldProps) {
-  const field = useFieldContext<string>()
+  const field = useFieldContext<string | number>()
 
   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
@@ -48,7 +48,13 @@ export function TextField({
         autoComplete={autoComplete}
         aria-invalid={isInvalid}
         onBlur={field.handleBlur}
-        onChange={(event) => field.handleChange(event.target.value)}
+        onChange={(event) => {
+          if (type === "number") {
+            field.handleChange(event.target.valueAsNumber)
+            return
+          }
+          field.handleChange(event.target.value)
+        }}
       />
 
       {description && !isInvalid && (

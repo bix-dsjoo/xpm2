@@ -21,8 +21,7 @@ export function FormFieldSet({
     <FieldSet>
       {legend && <FieldLegend>{legend}</FieldLegend>}
       {description && <FieldDescription>{description}</FieldDescription>}
-
-      <FieldGroup>{children}</FieldGroup>
+      <FieldGroup className="mt-4">{children}</FieldGroup>
     </FieldSet>
   )
 }

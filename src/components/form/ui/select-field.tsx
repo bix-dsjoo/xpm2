@@ -39,6 +39,7 @@ export function SelectField({
       <Select
         name={field.name}
         value={field.state.value}
+        items={options}
         onValueChange={field.handleChange}
       >
         <SelectTrigger id={field.name} aria-invalid={isInvalid}>
