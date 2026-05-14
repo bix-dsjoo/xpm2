@@ -3,12 +3,12 @@ import { createRoot } from "react-dom/client"
 
 import "./index.css"
 
-import { enableMocking } from "./mocks/enable-mocking.ts"
-import { QueryProvider } from "@/app/providers/query-provider.tsx"
-import { ThemeProvider } from "@/app/providers/theme-provider.tsx"
+import { enableMocking } from "./mocks/enable-mocking"
+import { QueryProvider } from "@/app/providers/query-provider"
+import { ThemeProvider } from "@/app/providers/theme-provider"
 import { RouterProvider } from "react-router"
-import { router } from "./router.ts"
-import { Toaster } from "@/base/ui/sonner.tsx"
+import { router } from "./router"
+import { Toaster } from "@/base/ui/sonner"
 
 enableMocking().then(() => {
   createRoot(document.getElementById("root")!).render(

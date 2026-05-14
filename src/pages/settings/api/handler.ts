@@ -1,7 +1,7 @@
 import { delay, http, HttpResponse } from "msw"
 
 import { SETTINGS_API_PATH } from "./api"
-import { settingsSchema, type Settings } from "../model/settings-schema"
+import { settingsSchema, type Settings } from "../model/schema"
 
 let settings: Settings = {
   systemOfMeasurement: "metric",

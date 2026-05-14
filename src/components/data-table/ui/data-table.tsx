@@ -19,9 +19,9 @@ import { cn } from "@/base/lib/utils"
 import {
   DATA_TABLE_DEFAULT_EMPTY_TEXT,
   DATA_TABLE_DEFAULT_LOADING_TEXT,
-} from "../config/data-table-constants"
-import { createDataTableColumns } from "../lib/create-data-table-columns"
-import type { DataTableProps } from "../model/data-table-types"
+} from "../config/constants"
+import { createDataTableColumns } from "../lib/create-columns"
+import type { DataTableProps } from "../model/types"
 import { DataTableHeaderGroup } from "./data-table-header-group"
 import { DataTableRow } from "./data-table-row"
 

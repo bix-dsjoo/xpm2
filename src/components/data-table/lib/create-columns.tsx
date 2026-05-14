@@ -3,8 +3,8 @@ import type { ColumnDef } from "@tanstack/react-table"
 import type {
   DataTableColumn,
   DataTableColumnMeta,
-} from "../model/data-table-types"
-import { formatDataTableValue, getDefaultAlign } from "./data-table-utils"
+} from "../model/types"
+import { formatDataTableValue, getDefaultAlign } from "./utils"
 
 export function createDataTableColumns<TData>(
   columns: DataTableColumn<TData>[]

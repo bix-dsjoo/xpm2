@@ -8,13 +8,13 @@ import {
   DATA_TABLE_DEFAULT_FALSE_TEXT,
   DATA_TABLE_DEFAULT_LOCALE,
   DATA_TABLE_DEFAULT_TRUE_TEXT,
-} from "../config/data-table-constants"
+} from "../config/constants"
 import type {
   DataTableAlign,
   DataTableColumn,
   DataTableColumnMeta,
   DataTableColumnType,
-} from "../model/data-table-types"
+} from "../model/types"
 
 export function isEmptyValue(value: unknown) {
   return value === null || value === undefined || value === ""

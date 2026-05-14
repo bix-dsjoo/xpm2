@@ -2,7 +2,7 @@ import { CircleCheckIcon, CircleX } from "lucide-react"
 import type {
   DataTableAlign,
   DataTableColumnType,
-} from "../model/data-table-types"
+} from "../model/types"
 
 export const DATA_TABLE_DEFAULT_EMPTY_TEXT = "데이터가 없습니다."
 export const DATA_TABLE_DEFAULT_LOADING_TEXT = "로딩 중..."

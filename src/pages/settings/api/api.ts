@@ -1,4 +1,4 @@
-import type { Settings } from "../model/settings-schema"
+import type { Settings } from "../model/schema"
 
 export const SETTINGS_API_PATH = "/api/settings"
 

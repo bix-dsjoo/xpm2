@@ -5,7 +5,7 @@ import {
   SETTINGS_DEFAULT_VALUES,
   settingsSchema,
   systemOfMeasurementOptions,
-} from "../model/settings-schema"
+} from "../model/schema"
 import { useSaveSettingsMutation, useSettingsQuery } from "../model/queries"
 
 export function SettingsPage() {

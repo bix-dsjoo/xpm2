@@ -6,4 +6,4 @@ export type {
   DataTableColumnMeta,
   DataTableColumnType,
   DataTableProps,
-} from "./model/data-table-types"
+} from "./model/types"

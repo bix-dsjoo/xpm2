@@ -6,8 +6,8 @@ import { cn } from "@/base/lib/utils"
 import {
   DATA_TABLE_CONTENT_JUSTIFY_CLASS,
   DATA_TABLE_TEXT_ALIGN_CLASS,
-} from "../config/data-table-constants"
-import { getColumnMeta } from "../lib/data-table-utils"
+} from "../config/constants"
+import { getColumnMeta } from "../lib/utils"
 
 type DataTableRowProps<TData> = {
   row: Row<TData>

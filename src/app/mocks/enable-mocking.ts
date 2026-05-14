@@ -3,7 +3,7 @@ export async function enableMocking() {
     return
   }
 
-  const { worker } = await import("./browser.ts")
+  const { worker } = await import("./browser")
 
   await worker.start()
 }
