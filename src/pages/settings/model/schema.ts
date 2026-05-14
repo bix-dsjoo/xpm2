@@ -1,11 +1,11 @@
 import { z } from "zod"
 
-export const systemOfMeasurementOptions = [
+export const SYSTEM_OF_MEASUREMENT_OPTIONS = [
   { label: "Metric", value: "metric" },
   { label: "Imperial", value: "imperial" },
 ]
 
-export const defaultPermissionOptions = [
+export const DEFAULT_PERMISSION_OPTIONS = [
   { label: "None", value: "none" },
   { label: "Administrator", value: "administrator" },
   { label: "GlobalUser", value: "global-user" },

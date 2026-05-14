@@ -1,7 +1,11 @@
 import { DataTable, type DataTableColumn } from "@/components/data-table"
 
 import { useDevicesQuery } from "../model/queries"
-import type { Device } from "../model/types"
+import {
+  DEVICE_STATE_OPTIONS,
+  deviceConnectionStatusOptions,
+  type Device,
+} from "../model/types"
 
 const deviceColumns = [
   {
@@ -15,10 +19,14 @@ const deviceColumns = [
   {
     key: "deviceState",
     header: "DEVICE STATE",
+    type: "option",
+    options: DEVICE_STATE_OPTIONS,
   },
   {
     key: "deviceConnectionStatus",
     header: "DEVICE CONNECTION STATUS",
+    type: "option",
+    options: deviceConnectionStatusOptions,
   },
   {
     key: "isManaged",

@@ -1,10 +1,10 @@
 import { useAppForm } from "@/components/form"
 
 import {
-  defaultPermissionOptions,
+  DEFAULT_PERMISSION_OPTIONS,
   SETTINGS_DEFAULT_VALUES,
   settingsSchema,
-  systemOfMeasurementOptions,
+  SYSTEM_OF_MEASUREMENT_OPTIONS,
 } from "../model/schema"
 import { useSaveSettingsMutation, useSettingsQuery } from "../model/queries"
 
@@ -40,7 +40,7 @@ export function SettingsPage() {
               <form.AppField name="systemOfMeasurement">
                 {(field) => (
                   <field.SelectField
-                    options={systemOfMeasurementOptions}
+                    options={SYSTEM_OF_MEASUREMENT_OPTIONS}
                     label="System of Measurement"
                     description="Change the system of measurement used in SOTI Connect (this does not affect the device)"
                   />
@@ -76,7 +76,7 @@ export function SettingsPage() {
               <form.AppField name="defaultPermission">
                 {(field) => (
                   <field.SelectField
-                    options={defaultPermissionOptions}
+                    options={DEFAULT_PERMISSION_OPTIONS}
                     label="Default Permission"
                     description="Set a role which will be used for users who do not have a predefined role, such as users coming from a third-party identity provider."
                   />

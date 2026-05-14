@@ -1,10 +1,13 @@
 import type { ReactNode } from "react"
 
+import type { Option } from "@/base/model/types"
+
 export type DataTableColumnType =
   | "text"
   | "number"
   | "date"
   | "boolean"
+  | "option"
   | "array"
 
 export type DataTableAlign = "left" | "center" | "right"
@@ -37,6 +40,8 @@ export type DataTableColumn<TData> = {
    */
   trueText?: ReactNode
   falseText?: ReactNode
+
+  options?: Option[]
 }
 
 export type DataTableColumnMeta = {

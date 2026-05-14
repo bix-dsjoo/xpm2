@@ -1,5 +1,8 @@
-import type { ReactNode } from "react"
+import { createElement, type ReactNode } from "react"
 import type { ColumnDef } from "@tanstack/react-table"
+
+import type { Option } from "@/base/model/types"
+import { Badge } from "@/base/ui/badge"
 
 import {
   DATA_TABLE_DEFAULT_ALIGN_BY_TYPE,
@@ -8,6 +11,7 @@ import {
   DATA_TABLE_DEFAULT_FALSE_TEXT,
   DATA_TABLE_DEFAULT_LOCALE,
   DATA_TABLE_DEFAULT_TRUE_TEXT,
+  DATA_TABLE_OPTION_BADGE_CLASS,
 } from "../config/constants"
 import type {
   DataTableAlign,
@@ -60,6 +64,9 @@ export function formatDataTableValue<TData>({
         trueText: column.trueText,
         falseText: column.falseText,
       })
+
+    case "option":
+      return formatOption(value, column.options)
 
     case "array":
       return formatArray(value, column.emptyText)
@@ -128,6 +135,22 @@ function formatBoolean(
   return value
     ? (options.trueText ?? DATA_TABLE_DEFAULT_TRUE_TEXT)
     : (options.falseText ?? DATA_TABLE_DEFAULT_FALSE_TEXT)
+}
+
+function formatOption(value: unknown, options?: Option[]) {
+  const stringValue = String(value)
+  const option = options?.find((option) => option.value === stringValue)
+
+  return createElement(
+    Badge,
+    {
+      variant: "secondary",
+      className: option?.color
+        ? DATA_TABLE_OPTION_BADGE_CLASS[option.color]
+        : undefined,
+    },
+    option?.label ?? stringValue
+  )
 }
 
 function formatArray(value: unknown, emptyText?: ReactNode) {

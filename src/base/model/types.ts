@@ -1,4 +1,7 @@
-export type Option = {
+export type OptionColor = "blue" | "green" | "amber" | "red" | "zinc"
+
+export type Option<TValue extends string = string> = {
+  value: TValue
   label: string
-  value: string
+  color?: OptionColor
 }
