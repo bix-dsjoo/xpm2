@@ -61,6 +61,9 @@ export function formatDataTableValue<TData>({
         falseText: column.falseText,
       })
 
+    case "array":
+      return formatArray(value, column.emptyText)
+
     case "text":
     default:
       return String(value)
@@ -125,4 +128,16 @@ function formatBoolean(
   return value
     ? (options.trueText ?? DATA_TABLE_DEFAULT_TRUE_TEXT)
     : (options.falseText ?? DATA_TABLE_DEFAULT_FALSE_TEXT)
+}
+
+function formatArray(value: unknown, emptyText?: ReactNode) {
+  if (!Array.isArray(value)) {
+    return String(value)
+  }
+
+  if (value.length === 0) {
+    return emptyText ?? DATA_TABLE_DEFAULT_EMPTY_CELL_TEXT
+  }
+
+  return value.map(String).join(", ")
 }

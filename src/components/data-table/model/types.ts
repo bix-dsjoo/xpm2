@@ -1,6 +1,11 @@
 import type { ReactNode } from "react"
 
-export type DataTableColumnType = "text" | "number" | "date" | "boolean"
+export type DataTableColumnType =
+  | "text"
+  | "number"
+  | "date"
+  | "boolean"
+  | "array"
 
 export type DataTableAlign = "left" | "center" | "right"
 

@@ -5,6 +5,10 @@ import type { Device } from "../model/types"
 
 const deviceColumns = [
   {
+    key: "deviceName",
+    header: "DEVICE NAME",
+  },
+  {
     key: "deviceType",
     header: "DEVICE TYPE",
   },
@@ -17,12 +21,23 @@ const deviceColumns = [
     header: "DEVICE CONNECTION STATUS",
   },
   {
-    key: "groups",
-    header: "GROUPS",
+    key: "isManaged",
+    header: "MANAGED",
+    type: "boolean",
   },
   {
-    key: "groupPaths",
-    header: "GROUPS PATHS",
+    key: "alertCount",
+    header: "ALERTS",
+    type: "number",
+  },
+  {
+    key: "lastConnectedAt",
+    header: "LAST CONNECTED",
+    type: "date",
+  },
+  {
+    key: "activeIpAddress",
+    header: "ACTIVE IP ADDRESS",
   },
   {
     key: "activeProtocol",
@@ -30,7 +45,8 @@ const deviceColumns = [
   },
   {
     key: "supportedProtocols",
-    header: "SUPPORTED PROTOCOL",
+    header: "SUPPORTED PROTOCOLS",
+    type: "array",
   },
   {
     key: "protocolAdapter",
@@ -41,8 +57,14 @@ const deviceColumns = [
     header: "PROTOCOL INSTANCE",
   },
   {
-    key: "activeIpAddress",
-    header: "ACTIVE IP INSTANCE",
+    key: "groups",
+    header: "GROUPS",
+    type: "array",
+  },
+  {
+    key: "groupPaths",
+    header: "GROUP PATHS",
+    type: "array",
   },
 ] satisfies DataTableColumn<Device>[]
 

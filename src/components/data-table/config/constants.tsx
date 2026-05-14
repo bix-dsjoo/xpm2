@@ -35,6 +35,7 @@ export const DATA_TABLE_DEFAULT_ALIGN_BY_TYPE = {
   number: "right",
   date: "center",
   boolean: "center",
+  array: "left",
 } satisfies Record<DataTableColumnType, DataTableAlign>
 
 export const DATA_TABLE_TEXT_ALIGN_CLASS = {

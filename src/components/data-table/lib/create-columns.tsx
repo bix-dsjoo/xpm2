@@ -1,19 +1,14 @@
 import type { ColumnDef } from "@tanstack/react-table"
 
-import type {
-  DataTableColumn,
-  DataTableColumnMeta,
-} from "../model/types"
+import type { DataTableColumn, DataTableColumnMeta } from "../model/types"
 import { formatDataTableValue, getDefaultAlign } from "./utils"
 
 export function createDataTableColumns<TData>(
   columns: DataTableColumn<TData>[]
 ): ColumnDef<TData>[] {
   return columns.map((column): ColumnDef<TData> => {
-    const type = column.type ?? "text"
-
     const meta: DataTableColumnMeta = {
-      align: column.align ?? getDefaultAlign(type),
+      align: column.align ?? getDefaultAlign(column.type),
       headerClassName: column.headerClassName,
       cellClassName: column.cellClassName,
       contentClassName: column.contentClassName,
