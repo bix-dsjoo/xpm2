@@ -51,6 +51,7 @@ export const DevicesPage = () => {
 
   return (
     <main className="flex min-h-svh flex-col gap-6 p-6">
+      <h1 className="font-medium">Devices</h1>
       <DataTable
         columns={deviceColumns}
         data={devices}
