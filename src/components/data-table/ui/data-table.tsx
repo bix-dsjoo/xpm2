@@ -14,7 +14,6 @@ import { DataTableHeaderGroup } from "./data-table-header-group"
 import { DataTableRow } from "./data-table-row"
 import { DataTableSkeletonRows } from "./data-table-skeleton-rows"
 import { EmptyData } from "@/base/ui/empty-data"
-import { Button } from "@/base/ui/button"
 
 /**
  * 데이터 목록을 공통 테이블 UI로 표시.
