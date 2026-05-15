@@ -5,15 +5,22 @@ import {
   type ColumnDef,
 } from "@tanstack/react-table"
 
-import { Table, TableBody, TableHeader } from "@/base/ui/table"
 import { cn } from "@/base/lib/utils"
+import { EmptyData } from "@/base/ui/empty-data"
+import { Skeleton } from "@/base/ui/skeleton"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from "@/base/ui/table"
 
 import { createDataTableColumns } from "../lib/create-columns"
+import { getDataTableColumnId } from "../lib/get-column-id"
 import type { DataTableProps } from "../model/types"
 import { DataTableHeaderGroup } from "./data-table-header-group"
 import { DataTableRow } from "./data-table-row"
-import { DataTableSkeletonRows } from "./data-table-skeleton-rows"
-import { EmptyData } from "@/base/ui/empty-data"
 
 /**
  * 데이터 목록을 공통 테이블 UI로 표시.
@@ -27,6 +34,10 @@ export function DataTable<TData>({
   getRowId,
 
   className,
+
+  EmptyIcon,
+  emptyTitle,
+  emptyDescription,
 }: DataTableProps<TData>) {
   const columnDefs = React.useMemo<ColumnDef<TData>[]>(
     () => createDataTableColumns(columns),
@@ -63,7 +74,23 @@ export function DataTable<TData>({
 
         <TableBody>
           {loading && data.length === 0 ? (
-            <DataTableSkeletonRows columns={columns} />
+            Array.from({ length: 8 }, (_, rowIndex) => (
+              <TableRow key={rowIndex} className="hover:bg-transparent">
+                {columns.map((column) => {
+                  const columnId = getDataTableColumnId(column)
+
+                  return (
+                    <TableCell key={columnId} className={column.cellClassName}>
+                      <Skeleton className="h-5 w-full" />
+                    </TableCell>
+                  )
+                })}
+              </TableRow>
+            ))
+          ) : rows.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={columns.length} />
+            </TableRow>
           ) : (
             rows.map((row) => <DataTableRow key={row.id} row={row} />)
           )}
@@ -72,7 +99,11 @@ export function DataTable<TData>({
 
       {!loading && rows.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <EmptyData />
+          <EmptyData
+            Icon={EmptyIcon}
+            title={emptyTitle}
+            description={emptyDescription}
+          />
         </div>
       )}
     </div>

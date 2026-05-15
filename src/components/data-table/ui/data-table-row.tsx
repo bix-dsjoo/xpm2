@@ -1,7 +1,7 @@
 import { flexRender, type Row } from "@tanstack/react-table"
 
-import { TableCell, TableRow } from "@/base/ui/table"
 import { cn } from "@/base/lib/utils"
+import { TableCell, TableRow } from "@/base/ui/table"
 
 import {
   DATA_TABLE_CONTENT_JUSTIFY_CLASS,

@@ -1,4 +1,4 @@
-import { createElement, type ReactNode } from "react"
+import type { ReactNode } from "react"
 
 import type { Option } from "@/base/model/types"
 import { Badge } from "@/base/ui/badge"
@@ -11,20 +11,22 @@ import {
   DATA_TABLE_DEFAULT_LOCALE,
   DATA_TABLE_DEFAULT_TRUE_TEXT,
 } from "../config/constants"
-import type { DataTableColumn } from "../model/types"
+import type { AccessorColumn, KeyColumn } from "../model/types"
 
 export function formatDataTableCellValue<TData>({
   value,
   column,
 }: {
   value: unknown
-  column: DataTableColumn<TData>
+  column: KeyColumn<TData> | AccessorColumn<TData>
 }): ReactNode {
   if (isEmptyCellValue(value)) {
     return DATA_TABLE_DEFAULT_EMPTY_CELL_TEXT
   }
 
-  switch (column.type) {
+  const columnType = column.type
+
+  switch (columnType) {
     case "number":
       return formatNumber(value)
 
@@ -47,6 +49,8 @@ export function formatDataTableCellValue<TData>({
     case undefined:
       return String(value)
   }
+
+  return assertNever(columnType)
 }
 
 export function isEmptyCellValue(value: unknown) {
@@ -99,16 +103,17 @@ function formatBoolean(value: unknown) {
   return value ? DATA_TABLE_DEFAULT_TRUE_TEXT : DATA_TABLE_DEFAULT_FALSE_TEXT
 }
 
-function formatOptionValue(value: unknown, options: Option[]) {
+function formatOptionValue(value: unknown, options?: Option[]) {
   const stringValue = String(value)
+
+  if (!options?.length) return stringValue
+
   const option = options.find((option) => option.value === stringValue)
 
-  return createElement(
-    Badge,
-    {
-      variant: option?.variant ?? "secondary",
-    },
-    option?.label ?? stringValue
+  return (
+    <Badge variant={option?.variant ?? "secondary"}>
+      {option?.label ?? stringValue}
+    </Badge>
   )
 }
 
@@ -122,4 +127,8 @@ function formatArray(value: unknown) {
   }
 
   return value.map(String).join(", ")
+}
+
+function assertNever(value: never): never {
+  throw new Error(`Unsupported data table column type: ${String(value)}`)
 }

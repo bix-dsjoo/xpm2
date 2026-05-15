@@ -1,7 +1,7 @@
 import { flexRender, type HeaderGroup } from "@tanstack/react-table"
 
-import { TableHead, TableRow } from "@/base/ui/table"
 import { cn } from "@/base/lib/utils"
+import { TableHead, TableRow } from "@/base/ui/table"
 
 import { DATA_TABLE_TEXT_ALIGN_CLASS } from "../config/constants"
 import { getColumnMeta } from "../lib/column-meta"

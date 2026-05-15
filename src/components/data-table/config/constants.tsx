@@ -1,4 +1,5 @@
 import { CircleCheckIcon, CircleX } from "lucide-react"
+
 import type { DataTableAlign, DataTableColumnType } from "../model/types"
 
 export const DATA_TABLE_DEFAULT_EMPTY_CELL_TEXT = "-"
