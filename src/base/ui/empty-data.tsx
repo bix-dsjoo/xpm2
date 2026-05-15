@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import type { LucideIcon } from "lucide-react"
+import { DatabaseIcon, type LucideIcon } from "lucide-react"
 
 import {
   Empty,
@@ -11,15 +11,15 @@ import {
 } from "./empty"
 
 type EmptyDataProps = {
-  Icon: LucideIcon
+  Icon?: LucideIcon
   title?: string
-  description?: string
+  description?: ReactNode
   content?: ReactNode
   className?: string
 }
 
 export const EmptyData = ({
-  Icon,
+  Icon = DatabaseIcon,
   title = "No data",
   description = "No data found",
   content,

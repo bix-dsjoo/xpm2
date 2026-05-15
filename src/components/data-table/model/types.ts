@@ -70,8 +70,6 @@ export type DataTableProps<TData> = {
   data: TData[]
 
   loading?: boolean
-  loadingText?: ReactNode
-  emptyText?: ReactNode
 
   getRowId?: (row: TData, index: number) => string
 

@@ -8,18 +8,13 @@ import {
 import { Table, TableBody, TableHeader } from "@/base/ui/table"
 import { cn } from "@/base/lib/utils"
 
-import {
-  DATA_TABLE_DEFAULT_EMPTY_TEXT,
-  DATA_TABLE_DEFAULT_LOADING_TEXT,
-} from "../config/constants"
 import { createDataTableColumns } from "../lib/create-columns"
 import type { DataTableProps } from "../model/types"
 import { DataTableHeaderGroup } from "./data-table-header-group"
 import { DataTableRow } from "./data-table-row"
+import { DataTableSkeletonRows } from "./data-table-skeleton-rows"
 import { EmptyData } from "@/base/ui/empty-data"
-import { Table2Icon } from "lucide-react"
 import { Button } from "@/base/ui/button"
-import { Skeleton } from "@/base/ui/skeleton"
 
 /**
  * 데이터 목록을 공통 테이블 UI로 표시.
@@ -29,8 +24,6 @@ export function DataTable<TData>({
   data,
 
   loading = false,
-  loadingText = DATA_TABLE_DEFAULT_LOADING_TEXT,
-  emptyText = DATA_TABLE_DEFAULT_EMPTY_TEXT,
 
   getRowId,
 
@@ -71,9 +64,7 @@ export function DataTable<TData>({
 
         <TableBody>
           {loading && data.length === 0 ? (
-            <div>
-              <Skeleton />
-            </div>
+            <DataTableSkeletonRows columns={columns} />
           ) : (
             rows.map((row) => <DataTableRow key={row.id} row={row} />)
           )}
@@ -82,14 +73,7 @@ export function DataTable<TData>({
 
       {!loading && rows.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <EmptyData
-            Icon={Table2Icon}
-            content={
-              <Button variant="outline" size="sm">
-                Add
-              </Button>
-            }
-          />
+          <EmptyData />
         </div>
       )}
     </div>
