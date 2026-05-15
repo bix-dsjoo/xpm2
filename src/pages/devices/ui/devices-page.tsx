@@ -1,3 +1,5 @@
+import * as React from "react"
+
 import { DataTable, type DataTableColumn } from "@/components/data-table"
 
 import { useDevicesQuery } from "../model/queries"
@@ -75,8 +77,22 @@ const deviceColumns = [
   },
 ] satisfies DataTableColumn<Device>[]
 
+const DEFAULT_PAGE = 1
+const DEFAULT_PAGE_SIZE = 25
+
 export const DevicesPage = () => {
-  const { data: devices = [], isFetching } = useDevicesQuery()
+  const [page, setPage] = React.useState(DEFAULT_PAGE)
+  const [pageSize, setPageSize] = React.useState(DEFAULT_PAGE_SIZE)
+
+  const { data, isFetching, refetch } = useDevicesQuery({
+    page,
+    pageSize,
+  })
+
+  const handlePageSizeChange = React.useCallback((nextPageSize: number) => {
+    setPage(DEFAULT_PAGE)
+    setPageSize(nextPageSize)
+  }, [])
 
   return (
     <main className="flex h-svh flex-col gap-6 p-6">
@@ -89,9 +105,15 @@ export const DevicesPage = () => {
 
       <DataTable
         columns={deviceColumns}
-        data={devices}
+        data={data?.data}
+        pagination={data?.pagination}
         loading={isFetching}
         getRowId={(row) => row.deviceId}
+        onPageChange={setPage}
+        onPageSizeChange={handlePageSizeChange}
+        onRefresh={() => {
+          void refetch()
+        }}
       />
     </main>
   )

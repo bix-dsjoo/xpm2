@@ -17,6 +17,18 @@ export type Device = {
   activeIpAddress: string
 }
 
+export type DevicesPagination = {
+  page: number
+  pageSize: number
+  totalItems: number
+  totalPages: number
+}
+
+export type DevicesResponse = {
+  data: Device[]
+  pagination: DevicesPagination
+}
+
 export type DeviceComplianceStatus =
   | "Compliant"
   | "NonCompliant"

@@ -1,19 +1,43 @@
 import { Button } from "@/base/ui/button"
 import { ButtonGroup } from "@/base/ui/button-group"
 import { MoveLeftIcon, MoveRightIcon } from "lucide-react"
+import type { DataTablePaginationState } from "../model/types"
 
-export function DataTablePagination() {
+type DataTablePaginationProps = {
+  pagination: DataTablePaginationState
+  onPageChange: (page: number) => void
+}
+
+export function DataTablePagination({
+  pagination,
+  onPageChange,
+}: DataTablePaginationProps) {
+  const currentPage = pagination.totalPages === 0 ? 0 : pagination.page
+  const canGoPrevious = pagination.page > 1 && pagination.totalPages > 0
+  const canGoNext =
+    pagination.page < pagination.totalPages && pagination.totalPages > 0
+
   return (
     <ButtonGroup>
-      <Button className="text-muted-foreground" variant="outline">
+      <Button
+        variant="outline"
+        disabled={!canGoPrevious}
+        onClick={() => onPageChange(pagination.page - 1)}
+        aria-label="Previous page"
+      >
         <MoveLeftIcon />
       </Button>
 
-      <Button className="text-xs font-normal" variant="outline">
-        1 of 1
+      <Button className="text-xs font-normal" variant="outline" disabled>
+        {currentPage} of {pagination.totalPages}
       </Button>
 
-      <Button className="text-muted-foreground" variant="outline">
+      <Button
+        variant="outline"
+        disabled={!canGoNext}
+        onClick={() => onPageChange(pagination.page + 1)}
+        aria-label="Next page"
+      >
         <MoveRightIcon />
       </Button>
     </ButtonGroup>

@@ -3,6 +3,51 @@ import { delay, http, HttpResponse } from "msw"
 import { DEVICES_API_PATH } from "./api"
 import type { Device } from "../model/types"
 
+const DEFAULT_PAGE = 1
+const DEFAULT_PAGE_SIZE = 25
+const PAGE_SIZE_OPTIONS = [25, 50, 75, 100] as const
+
+function getNumberParam(
+  searchParams: URLSearchParams,
+  key: string,
+  defaultValue: number
+) {
+  const value = Number(searchParams.get(key))
+
+  return Number.isInteger(value) && value > 0 ? value : defaultValue
+}
+
+function getPageSize(searchParams: URLSearchParams) {
+  const pageSize = getNumberParam(searchParams, "pageSize", DEFAULT_PAGE_SIZE)
+
+  return PAGE_SIZE_OPTIONS.includes(
+    pageSize as (typeof PAGE_SIZE_OPTIONS)[number]
+  )
+    ? pageSize
+    : DEFAULT_PAGE_SIZE
+}
+
+function getPaginatedDevices(request: Request, source: Device[]) {
+  const url = new URL(request.url)
+  const pageSize = getPageSize(url.searchParams)
+  const totalItems = source.length
+  const totalPages = Math.ceil(totalItems / pageSize)
+  const requestedPage = getNumberParam(url.searchParams, "page", DEFAULT_PAGE)
+  const page =
+    totalPages === 0 ? DEFAULT_PAGE : Math.min(requestedPage, totalPages)
+  const startIndex = (page - 1) * pageSize
+
+  return {
+    data: source.slice(startIndex, startIndex + pageSize),
+    pagination: {
+      page,
+      pageSize,
+      totalItems,
+      totalPages,
+    },
+  }
+}
+
 const devices: Device[] = [
   {
     deviceId: "1",
@@ -807,10 +852,9 @@ const devices: Device[] = [
 ]
 
 export const devicesHandlers = [
-  http.get(DEVICES_API_PATH, async () => {
+  http.get(DEVICES_API_PATH, async ({ request }) => {
     await delay(1000)
 
-    const isEmpty = Math.random() < 0.5
-    return HttpResponse.json(isEmpty ? [] : devices)
+    return HttpResponse.json(getPaginatedDevices(request, devices))
   }),
 ]

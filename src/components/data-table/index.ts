@@ -4,5 +4,6 @@ export type {
   DataTableAlign,
   DataTableColumn,
   DataTableColumnType,
+  DataTablePaginationState,
   DataTableProps,
 } from "./model/types"

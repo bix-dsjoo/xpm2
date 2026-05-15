@@ -9,10 +9,21 @@ import {
   SelectValue,
 } from "@/base/ui/select"
 
-export function DataTablePageSizeSelect() {
+type DataTablePageSizeSelectProps = {
+  pageSize: number
+  onPageSizeChange: (pageSize: number) => void
+}
+
+export function DataTablePageSizeSelect({
+  pageSize,
+  onPageSizeChange,
+}: DataTablePageSizeSelectProps) {
   return (
     <ButtonGroup>
-      <Select defaultValue="25">
+      <Select
+        value={String(pageSize)}
+        onValueChange={(value) => onPageSizeChange(Number(value))}
+      >
         <SelectTrigger>
           <SelectValue />
         </SelectTrigger>

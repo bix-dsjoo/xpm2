@@ -22,7 +22,8 @@ import { DataTableEmptyOverlay } from "./data-table-empty-overlay"
  */
 export function DataTable<TData>({
   columns,
-  data,
+  data = [],
+  pagination,
 
   loading = false,
 
@@ -33,6 +34,10 @@ export function DataTable<TData>({
   EmptyIcon,
   emptyTitle,
   emptyDescription,
+
+  onPageChange,
+  onPageSizeChange,
+  onRefresh,
 }: DataTableProps<TData>) {
   const columnDefs = React.useMemo<ColumnDef<TData>[]>(
     () => createDataTableColumns(columns),
@@ -51,7 +56,13 @@ export function DataTable<TData>({
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <DataTableToolbar />
+      <DataTableToolbar
+        pagination={pagination}
+        onPageChange={onPageChange}
+        onPageSizeChange={onPageSizeChange}
+        onRefresh={onRefresh}
+        loading={loading}
+      />
       <div
         className={cn(
           "relative flex-1 overflow-hidden rounded-md border",
@@ -70,7 +81,7 @@ export function DataTable<TData>({
           </TableHeader>
 
           <TableBody>
-            {loading && data.length === 0 ? (
+            {loading ? (
               <DataTableSkeletonRows columns={columns} />
             ) : rows.length === 0 ? (
               <DataTableEmptyRow colSpan={columns.length} />
