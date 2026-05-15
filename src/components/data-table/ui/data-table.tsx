@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import {
   getCoreRowModel,
@@ -7,13 +5,7 @@ import {
   type ColumnDef,
 } from "@tanstack/react-table"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "@/base/ui/table"
+import { Table, TableBody, TableHeader } from "@/base/ui/table"
 import { cn } from "@/base/lib/utils"
 
 import {
@@ -24,7 +16,14 @@ import { createDataTableColumns } from "../lib/create-columns"
 import type { DataTableProps } from "../model/types"
 import { DataTableHeaderGroup } from "./data-table-header-group"
 import { DataTableRow } from "./data-table-row"
+import { EmptyData } from "@/base/ui/empty-data"
+import { Table2Icon } from "lucide-react"
+import { Button } from "@/base/ui/button"
+import { Skeleton } from "@/base/ui/skeleton"
 
+/**
+ * 데이터 목록을 공통 테이블 UI로 표시.
+ */
 export function DataTable<TData>({
   columns,
   data,
@@ -52,14 +51,15 @@ export function DataTable<TData>({
 
   const rows = table.getRowModel().rows
 
-  const columnCount = Math.max(table.getAllLeafColumns().length, 1)
-
   return (
     <div
-      className={cn("w-full overflow-auto rounded-md border", className)}
+      className={cn(
+        "relative flex-1 overflow-hidden rounded-md border",
+        className
+      )}
       aria-busy={loading || undefined}
     >
-      <Table>
+      <Table className="border-separate border-spacing-0">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <DataTableHeaderGroup
@@ -71,35 +71,27 @@ export function DataTable<TData>({
 
         <TableBody>
           {loading && data.length === 0 ? (
-            <DataTableStateRow colSpan={columnCount} content={loadingText} />
-          ) : rows.length === 0 ? (
-            <DataTableStateRow colSpan={columnCount} content={emptyText} />
+            <div>
+              <Skeleton />
+            </div>
           ) : (
-            rows.map((row) => (
-              <DataTableRow key={row.id} row={row} />
-            ))
+            rows.map((row) => <DataTableRow key={row.id} row={row} />)
           )}
         </TableBody>
       </Table>
-    </div>
-  )
-}
 
-function DataTableStateRow({
-  colSpan,
-  content,
-}: {
-  colSpan: number
-  content: React.ReactNode
-}) {
-  return (
-    <TableRow>
-      <TableCell
-        colSpan={colSpan}
-        className="h-24 text-center text-muted-foreground"
-      >
-        {content}
-      </TableCell>
-    </TableRow>
+      {!loading && rows.length === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <EmptyData
+            Icon={Table2Icon}
+            content={
+              <Button variant="outline" size="sm">
+                Add
+              </Button>
+            }
+          />
+        </div>
+      )}
+    </div>
   )
 }

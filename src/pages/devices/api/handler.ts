@@ -810,6 +810,7 @@ export const devicesHandlers = [
   http.get(DEVICES_API_PATH, async () => {
     await delay(1000)
 
-    return HttpResponse.json(devices)
+    const isEmpty = Math.random() < 0.5
+    return HttpResponse.json(isEmpty ? [] : devices)
   }),
 ]

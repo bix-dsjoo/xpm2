@@ -7,7 +7,7 @@ import {
   DATA_TABLE_CONTENT_JUSTIFY_CLASS,
   DATA_TABLE_TEXT_ALIGN_CLASS,
 } from "../config/constants"
-import { getColumnMeta } from "../lib/utils"
+import { getColumnMeta } from "../lib/column-meta"
 
 type DataTableRowProps<TData> = {
   row: Row<TData>

@@ -4,7 +4,7 @@ import { TableHead, TableRow } from "@/base/ui/table"
 import { cn } from "@/base/lib/utils"
 
 import { DATA_TABLE_TEXT_ALIGN_CLASS } from "../config/constants"
-import { getColumnMeta } from "../lib/utils"
+import { getColumnMeta } from "../lib/column-meta"
 
 type DataTableHeaderGroupProps<TData> = {
   headerGroup: HeaderGroup<TData>
@@ -24,6 +24,7 @@ export function DataTableHeaderGroup<TData>({
             key={header.id}
             colSpan={header.colSpan}
             className={cn(
+              "sticky top-0 z-10 border-b bg-background",
               DATA_TABLE_TEXT_ALIGN_CLASS[align],
               meta?.headerClassName
             )}
