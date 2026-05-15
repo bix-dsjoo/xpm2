@@ -14,7 +14,9 @@ const deviceColumns = [
     key: "deviceName",
     header: "DEVICE NAME",
     cell: ({ getValue }) => (
-      <Button variant="link">{getValue<string>()}</Button>
+      <Button className={"px-0"} variant="link">
+        {getValue<string>()}
+      </Button>
     ),
   },
   {
