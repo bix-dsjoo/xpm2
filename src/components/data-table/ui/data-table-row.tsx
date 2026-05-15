@@ -25,7 +25,10 @@ export function DataTableRow<TData>({ row }: DataTableRowProps<TData>) {
         )
 
         return (
-          <TableCell key={cell.id} className={meta?.cellClassName}>
+          <TableCell
+            key={cell.id}
+            className={cn("border-b", meta?.cellClassName)}
+          >
             <div
               className={cn(
                 "flex w-full items-center gap-1",
