@@ -7,6 +7,7 @@ import { DataTablePageSizeSelect } from "./data-table-page-size-select"
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableActions } from "./data-table-actions"
 import type { DataTablePaginationState } from "../model/types"
+import { getDataTableRangeDescription } from "../lib/get-range-description"
 
 type DataTableToolbarProps = {
   pagination?: DataTablePaginationState
@@ -14,20 +15,6 @@ type DataTableToolbarProps = {
   onPageChange?: (page: number) => void
   onPageSizeChange?: (pageSize: number) => void
   onRefresh?: () => void
-}
-
-function getRangeDescription(pagination?: DataTablePaginationState) {
-  if (!pagination || pagination.totalItems === 0) {
-    return "(0 of 0)"
-  }
-
-  const start = (pagination.page - 1) * pagination.pageSize + 1
-  const end = Math.min(
-    pagination.page * pagination.pageSize,
-    pagination.totalItems
-  )
-
-  return `(${start}-${end} of ${pagination.totalItems})`
 }
 
 export function DataTableToolbar({
@@ -42,7 +29,7 @@ export function DataTableToolbar({
       <div className="flex items-center gap-2">
         <DataTableTitle
           title="Devices"
-          description={getRangeDescription(pagination)}
+          description={getDataTableRangeDescription(pagination)}
         />
 
         {pagination && onPageSizeChange && (

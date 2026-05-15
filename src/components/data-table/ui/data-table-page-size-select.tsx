@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/base/ui/select"
+import { useState } from "react"
 
 type DataTablePageSizeSelectProps = {
   pageSize: number
@@ -18,11 +19,15 @@ export function DataTablePageSizeSelect({
   pageSize,
   onPageSizeChange,
 }: DataTablePageSizeSelectProps) {
+  const [open, setOpen] = useState(false)
+
   return (
     <ButtonGroup>
       <Select
         value={String(pageSize)}
         onValueChange={(value) => onPageSizeChange(Number(value))}
+        open={open}
+        onOpenChange={setOpen}
       >
         <SelectTrigger>
           <SelectValue />
@@ -38,7 +43,11 @@ export function DataTablePageSizeSelect({
         </SelectContent>
       </Select>
 
-      <Button className="text-xs font-normal" variant="outline">
+      <Button
+        className="text-xs font-normal"
+        variant="outline"
+        onClick={() => setOpen(true)}
+      >
         Per Page
       </Button>
     </ButtonGroup>
