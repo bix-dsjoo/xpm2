@@ -23,6 +23,8 @@ export function useDataTablePagination({
   return {
     page,
     pageSize,
+    totalPages: 0,
+    totalItems: 0,
     setPage,
     setPageSize,
     onPageChange: setPage,

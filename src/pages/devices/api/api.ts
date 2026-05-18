@@ -1,18 +1,12 @@
-import type { DevicesResponse } from "../model/types"
+import type { FetchDevicesParams, FetchDevicesResult } from "./dto"
 
 export const DEVICES_API_PATH = "/api/devices"
-
-type FetchDevicesParams = {
-  page: number
-  pageSize: number
-  signal?: AbortSignal
-}
 
 export async function fetchDevices({
   page,
   pageSize,
   signal,
-}: FetchDevicesParams): Promise<DevicesResponse> {
+}: FetchDevicesParams): Promise<FetchDevicesResult> {
   const searchParams = new URLSearchParams({
     page: String(page),
     pageSize: String(pageSize),
@@ -26,5 +20,5 @@ export async function fetchDevices({
     throw new Error("Failed to fetch devices")
   }
 
-  return (await response.json()) as DevicesResponse
+  return (await response.json()) as FetchDevicesResult
 }

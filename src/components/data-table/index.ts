@@ -7,7 +7,6 @@ export type {
   DataTableColumn,
   DataTableColumnType,
   DataTablePagination,
-  DataTablePaginationMeta,
   DataTableProps,
   DataTableSelection,
   DataTableSelectionMode,

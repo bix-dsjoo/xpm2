@@ -6,13 +6,13 @@ import {
   type DataTableColumn,
 } from "@/components/data-table"
 
+import { type Device } from "../model/types"
+import { useDevicesQuery } from "../model/queries"
 import {
   DEVICE_COMPLIANCE_STATUS_OPTIONS,
   DEVICE_CONNECTION_STATUS_OPTIONS,
   DEVICE_STATE_OPTIONS,
-  type Device,
-} from "../model/types"
-import { useDevicesQuery } from "../model/queries"
+} from "../model/enums"
 
 const deviceColumns = [
   {
@@ -98,11 +98,11 @@ export function DevicesPageTable() {
     <DataTable
       title="Devices"
       columns={deviceColumns}
-      data={data?.data}
+      data={data?.items}
       pagination={{ ...pagination, ...data?.pagination }}
       selection={selection}
       loading={isFetching}
-      getRowId={(row) => row.deviceId}
+      getRowId={(row) => row.id}
       onRefresh={refetch}
     />
   )
