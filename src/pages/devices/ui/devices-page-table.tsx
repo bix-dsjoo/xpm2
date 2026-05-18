@@ -1,9 +1,9 @@
 import { Button } from "@/base/ui/button"
 import {
   DataTable,
+  useDataTablePagination,
   useDataTableRowSelection,
   type DataTableColumn,
-  type DataTablePagination,
 } from "@/components/data-table"
 
 import {
@@ -12,6 +12,7 @@ import {
   DEVICE_STATE_OPTIONS,
   type Device,
 } from "../model/types"
+import { useDevicesQuery } from "../model/queries"
 
 const deviceColumns = [
   {
@@ -83,30 +84,26 @@ const deviceColumns = [
   },
 ] satisfies DataTableColumn<Device>[]
 
-type DevicesPageTableProps = {
-  data?: Device[]
-  pagination?: DataTablePagination
-  loading: boolean
-  onRefresh: () => void
-}
+export function DevicesPageTable() {
+  const pagination = useDataTablePagination()
 
-export function DevicesPageTable({
-  data,
-  pagination,
-  loading,
-  onRefresh,
-}: DevicesPageTableProps) {
+  const { data, isFetching, refetch } = useDevicesQuery({
+    page: pagination.page,
+    pageSize: pagination.pageSize,
+  })
+
   const selection = useDataTableRowSelection()
 
   return (
     <DataTable
+      title="Devices"
       columns={deviceColumns}
-      data={data}
-      pagination={pagination}
+      data={data?.data}
+      pagination={{ ...pagination, ...data?.pagination }}
       selection={selection}
-      loading={loading}
+      loading={isFetching}
       getRowId={(row) => row.deviceId}
-      onRefresh={onRefresh}
+      onRefresh={refetch}
     />
   )
 }

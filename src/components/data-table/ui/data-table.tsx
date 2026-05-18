@@ -22,6 +22,8 @@ import { DataTableEmptyOverlay } from "./data-table-empty-overlay"
  * 데이터 목록을 공통 테이블 UI로 표시.
  */
 export function DataTable<TData>({
+  title,
+
   columns,
   data = [],
   pagination,
@@ -76,6 +78,7 @@ export function DataTable<TData>({
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       <DataTableToolbar
+        title={title}
         pagination={pagination}
         onRefresh={onRefresh}
         loading={loading}

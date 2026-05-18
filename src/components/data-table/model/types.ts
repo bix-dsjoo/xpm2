@@ -144,6 +144,8 @@ export type DataTableSelection<TData> = {
 }
 
 export type DataTableProps<TData> = {
+  title?: string
+
   columns: DataTableColumn<TData>[]
   data?: TData[]
 

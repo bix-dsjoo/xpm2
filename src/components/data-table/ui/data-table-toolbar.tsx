@@ -10,17 +10,23 @@ import type { DataTablePagination as DataTablePaginationConfig } from "../model/
 import { getDataTableRangeDescription } from "../lib/get-range-description"
 
 type Props = {
+  title?: string
   pagination?: DataTablePaginationConfig
   loading: boolean
   onRefresh?: () => void
 }
 
-export function DataTableToolbar({ pagination, loading, onRefresh }: Props) {
+export function DataTableToolbar({
+  title,
+  pagination,
+  loading,
+  onRefresh,
+}: Props) {
   return (
     <header className="flex items-center justify-between p-2">
       <div className="flex items-center gap-2">
         <DataTableTitle
-          title="Devices"
+          title={title}
           description={getDataTableRangeDescription(pagination)}
         />
 
