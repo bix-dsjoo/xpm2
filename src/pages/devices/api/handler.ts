@@ -1,12 +1,32 @@
 import { delay, http, HttpResponse } from "msw"
 
-import { DEVICE_CHART_PREFERENCES_API_PATH, DEVICES_API_PATH } from "./api"
-import type { DeviceChartPreferencesResult } from "./dto"
+import type {
+  CategoryChartBucket,
+  ChartInterval,
+  TimeChartBucket,
+} from "@/base/model/chart"
+
+import {
+  DEVICE_CHART_PREFERENCES_API_PATH,
+  DEVICE_CHARTS_QUERY_API_PATH,
+  DEVICES_API_PATH,
+} from "./api"
+import type {
+  DeviceChartPreferencesResult,
+  DeviceChartsQueryRequest,
+} from "./dto"
+import { DEVICE_CHART_FIELDS, type DeviceChartField } from "../config/chart"
 import type { Device } from "../model/types"
 
 const DEFAULT_PAGE = 1
 const DEFAULT_PAGE_SIZE = 25
 const PAGE_SIZE_OPTIONS = [25, 50, 75, 100] as const
+const DEFAULT_TIME_ZONE = "+09:00"
+const DEFAULT_CHART_INTERVAL = "day" satisfies ChartInterval
+const MILLISECONDS_PER_SECOND = 1000
+const MILLISECONDS_PER_MINUTE = 60 * MILLISECONDS_PER_SECOND
+const MILLISECONDS_PER_HOUR = 60 * MILLISECONDS_PER_MINUTE
+const MILLISECONDS_PER_DAY = 24 * MILLISECONDS_PER_HOUR
 
 function getNumberParam(
   searchParams: URLSearchParams,
@@ -49,6 +69,246 @@ function getPaginatedDevices(request: Request, source: Device[]) {
   }
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null
+}
+
+function isPositiveInteger(value: unknown): value is number {
+  return Number.isInteger(value) && value > 0
+}
+
+function isDeviceChartField(value: unknown): value is DeviceChartField {
+  return typeof value === "string" && value in DEVICE_CHART_FIELDS
+}
+
+function parseDeviceChartsQueryRequest(
+  value: unknown
+): DeviceChartsQueryRequest | null {
+  if (!isRecord(value) || !Array.isArray(value.charts)) {
+    return null
+  }
+
+  const charts = value.charts.filter((chart) => {
+    if (!isRecord(chart) || typeof chart.id !== "string") {
+      return false
+    }
+
+    const { query } = chart
+
+    return (
+      isRecord(query) &&
+      isDeviceChartField(query.field) &&
+      isPositiveInteger(query.limit)
+    )
+  }) as DeviceChartsQueryRequest["charts"]
+
+  return charts.length === value.charts.length ? { charts } : null
+}
+
+function getDeviceChartData(
+  item: DeviceChartsQueryRequest["charts"][number],
+  source: Device[]
+) {
+  const { id, query } = item
+  const field = query.field
+  const definition = DEVICE_CHART_FIELDS[field]
+
+  if (definition.kind === "category") {
+    return {
+      id,
+      field,
+      kind: "category" as const,
+      buckets: getCategoryBuckets(source, field, query.limit),
+    }
+  }
+
+  const interval = query.interval ?? DEFAULT_CHART_INTERVAL
+
+  return {
+    id,
+    field,
+    kind: "time" as const,
+    interval,
+    buckets: getTimeBuckets(
+      source,
+      field,
+      interval,
+      query.limit,
+      query.timeZone ?? DEFAULT_TIME_ZONE
+    ),
+  }
+}
+
+function getCategoryBuckets(
+  source: Device[],
+  field: DeviceChartField,
+  limit: number
+): CategoryChartBucket[] {
+  const counts = new Map<string, number>()
+
+  source.forEach((device) => {
+    const label = String(device[field])
+    counts.set(label, (counts.get(label) ?? 0) + 1)
+  })
+
+  const buckets = Array.from(counts, ([label, count]) => ({
+    label,
+    count,
+  })).sort((left, right) => right.count - left.count)
+
+  if (buckets.length <= limit) {
+    return buckets
+  }
+
+  const visibleCount = Math.max(limit - 1, 0)
+  const visibleBuckets = buckets.slice(0, visibleCount)
+  const otherCount = buckets
+    .slice(visibleCount)
+    .reduce((sum, bucket) => sum + bucket.count, 0)
+
+  return [
+    ...visibleBuckets,
+    { label: "Other", count: otherCount, isOther: true },
+  ]
+}
+
+function getTimeBuckets(
+  source: Device[],
+  field: DeviceChartField,
+  interval: ChartInterval,
+  limit: number,
+  timeZone: string
+): TimeChartBucket[] {
+  const offsetMinutes = parseTimeZoneOffsetMinutes(timeZone)
+  const intervalMs = getIntervalMilliseconds(interval)
+  const latestTime = Math.max(
+    ...source.map((device) => new Date(String(device[field])).getTime())
+  )
+  const latestBucketStart = getTimeBucketStart(
+    new Date(latestTime),
+    interval,
+    offsetMinutes
+  )
+
+  return Array.from({ length: limit }, (_, index) => {
+    const startTime = new Date(latestBucketStart.getTime() - index * intervalMs)
+    const endTime = new Date(startTime.getTime() + intervalMs - 1)
+
+    return {
+      startTime: formatDateTimeWithOffset(startTime, offsetMinutes),
+      endTime: formatDateTimeWithOffset(endTime, offsetMinutes),
+      label: formatDateLabel(startTime, interval, offsetMinutes),
+      count: source.filter((device) => {
+        const time = new Date(String(device[field])).getTime()
+
+        return time >= startTime.getTime() && time <= endTime.getTime()
+      }).length,
+    }
+  })
+}
+
+function getIntervalMilliseconds(interval: ChartInterval) {
+  switch (interval) {
+    case "second":
+      return MILLISECONDS_PER_SECOND
+    case "minute":
+      return MILLISECONDS_PER_MINUTE
+    case "hour":
+      return MILLISECONDS_PER_HOUR
+    case "week":
+      return 7 * MILLISECONDS_PER_DAY
+    case "month":
+      return 30 * MILLISECONDS_PER_DAY
+    case "year":
+      return 365 * MILLISECONDS_PER_DAY
+    case "day":
+    default:
+      return MILLISECONDS_PER_DAY
+  }
+}
+
+function parseTimeZoneOffsetMinutes(timeZone: string) {
+  const match = /^([+-])(\d{2}):(\d{2})$/.exec(timeZone)
+
+  if (!match) {
+    return 0
+  }
+
+  const [, sign, hours, minutes] = match
+  const value = Number(hours) * 60 + Number(minutes)
+
+  return sign === "-" ? -value : value
+}
+
+function getTimeBucketStart(
+  date: Date,
+  interval: ChartInterval,
+  offsetMinutes: number
+) {
+  const localDate = new Date(date.getTime() + offsetMinutes * 60 * 1000)
+
+  if (interval === "second") {
+    return new Date(Math.floor(date.getTime() / 1000) * 1000)
+  }
+
+  if (interval === "minute") {
+    return new Date(
+      Math.floor(date.getTime() / MILLISECONDS_PER_MINUTE) *
+        MILLISECONDS_PER_MINUTE
+    )
+  }
+
+  if (interval === "hour") {
+    return new Date(
+      Math.floor(date.getTime() / MILLISECONDS_PER_HOUR) * MILLISECONDS_PER_HOUR
+    )
+  }
+
+  const start = Date.UTC(
+    localDate.getUTCFullYear(),
+    interval === "year" ? 0 : localDate.getUTCMonth(),
+    interval === "month" || interval === "year" ? 1 : localDate.getUTCDate()
+  )
+  const localStart = new Date(start)
+
+  if (interval === "week") {
+    return new Date(
+      localStart.getTime() -
+        localStart.getUTCDay() * MILLISECONDS_PER_DAY -
+        offsetMinutes * 60 * 1000
+    )
+  }
+
+  return new Date(localStart.getTime() - offsetMinutes * 60 * 1000)
+}
+
+function formatDateTimeWithOffset(date: Date, offsetMinutes: number) {
+  const localDate = new Date(date.getTime() + offsetMinutes * 60 * 1000)
+  const offsetSign = offsetMinutes < 0 ? "-" : "+"
+  const absoluteOffsetMinutes = Math.abs(offsetMinutes)
+  const offsetHours = String(Math.floor(absoluteOffsetMinutes / 60)).padStart(
+    2,
+    "0"
+  )
+  const offsetRemainingMinutes = String(absoluteOffsetMinutes % 60).padStart(
+    2,
+    "0"
+  )
+
+  return `${localDate.toISOString().replace("Z", "")}${offsetSign}${offsetHours}:${offsetRemainingMinutes}`
+}
+
+function formatDateLabel(
+  date: Date,
+  interval: ChartInterval,
+  offsetMinutes: number
+) {
+  const localDate = new Date(date.getTime() + offsetMinutes * 60 * 1000)
+  const dateLabel = localDate.toISOString().slice(0, 10)
+
+  return interval === "week" ? `Week of ${dateLabel}` : dateLabel
+}
+
 const chartPreferences: DeviceChartPreferencesResult = {
   charts: [
     {
@@ -56,7 +316,7 @@ const chartPreferences: DeviceChartPreferencesResult = {
       chartType: "donut",
       query: {
         field: "deviceType",
-        limit: 15,
+        limit: 5,
       },
     },
     {
@@ -886,5 +1146,22 @@ export const devicesHandlers = [
     await delay(500)
 
     return HttpResponse.json(chartPreferences)
+  }),
+
+  http.post(DEVICE_CHARTS_QUERY_API_PATH, async ({ request }) => {
+    await delay(500)
+
+    const payload = parseDeviceChartsQueryRequest(await request.json())
+
+    if (!payload) {
+      return HttpResponse.json(
+        { message: "Invalid device charts query" },
+        { status: 400 }
+      )
+    }
+
+    return HttpResponse.json({
+      charts: payload.charts.map((chart) => getDeviceChartData(chart, devices)),
+    })
   }),
 ]

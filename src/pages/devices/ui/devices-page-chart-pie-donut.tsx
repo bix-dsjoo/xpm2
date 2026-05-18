@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/base/ui/card"
+import type { CategoryChartData } from "@/base/model/chart"
 import {
   ChartContainer,
   ChartLegend,
@@ -9,44 +10,46 @@ import {
 } from "@/base/ui/chart"
 import { Pie, PieChart } from "recharts"
 
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
-]
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "var(--chart-1)",
-  },
-  safari: {
-    label: "Safari",
-    color: "var(--chart-2)",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "var(--chart-3)",
-  },
-  edge: {
-    label: "Edge",
-    color: "var(--chart-4)",
-  },
-  other: {
-    label: "Other",
-    color: "var(--chart-5)",
-  },
-} satisfies ChartConfig
+type ChartPieDonutProps = {
+  data?: CategoryChartData
+  title: string
+}
 
-export const ChartPieDonut = () => {
+const chartColors = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+] as const
+
+export const ChartPieDonut = ({ data, title }: ChartPieDonutProps) => {
+  const chartData =
+    data?.buckets.map((bucket, index) => ({
+      label: bucket.label,
+      count: bucket.count,
+      fill: chartColors[index % chartColors.length],
+    })) ?? []
+
+  const chartConfig = {
+    count: {
+      label: "Count",
+    },
+    ...Object.fromEntries(
+      chartData.map((bucket) => [
+        bucket.label,
+        {
+          label: bucket.label,
+          color: bucket.fill,
+        },
+      ])
+    ),
+  } satisfies ChartConfig
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Device Type</CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer
@@ -60,12 +63,12 @@ export const ChartPieDonut = () => {
             />
             <Pie
               data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
+              dataKey="count"
+              nameKey="label"
               innerRadius={60}
             />
             <ChartLegend
-              content={<ChartLegendContent nameKey="browser" />}
+              content={<ChartLegendContent nameKey="label" />}
               className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
             />
           </PieChart>

@@ -1,5 +1,5 @@
 import type { PaginationMeta } from "@/base/model/pagination"
-import type { ChartPreference } from "@/base/model/chart"
+import type { ChartData, ChartPreference, ChartQuery } from "@/base/model/chart"
 
 import type { Device } from "../model/types"
 import type { DeviceChartField } from "../config/chart"
@@ -18,8 +18,17 @@ export type FetchDevicesParams = FetchDevicesQuery & {
   signal?: AbortSignal
 }
 
-export type DeviceChartPreference = ChartPreference<DeviceChartField>
-
 export type DeviceChartPreferencesResult = {
-  charts: DeviceChartPreference[]
+  charts: ChartPreference<DeviceChartField>[]
+}
+
+export type DeviceChartsQueryRequest = {
+  charts: {
+    id: string
+    query: ChartQuery<DeviceChartField>
+  }[]
+}
+
+export type DeviceChartsQueryResult = {
+  charts: ChartData<DeviceChartField>[]
 }

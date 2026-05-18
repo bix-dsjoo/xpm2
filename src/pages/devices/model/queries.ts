@@ -1,6 +1,11 @@
 import { keepPreviousData, queryOptions, useQuery } from "@tanstack/react-query"
 
-import { fetchDeviceChartPreferences, fetchDevices } from "../api/api"
+import {
+  fetchDeviceChartPreferences,
+  fetchDeviceCharts,
+  fetchDevices,
+} from "../api/api"
+import type { DeviceChartsQueryRequest } from "../api/dto"
 
 type DevicesListParams = {
   page: number
@@ -13,6 +18,8 @@ export const devicesQueryKeys = {
     [...devicesQueryKeys.all, "list", params] as const,
   chartPreferences: () =>
     [...devicesQueryKeys.all, "chart-preferences"] as const,
+  charts: (request: DeviceChartsQueryRequest) =>
+    [...devicesQueryKeys.all, "charts", request] as const,
 }
 
 export const devicesQueries = {
@@ -29,6 +36,13 @@ export const devicesQueries = {
       queryFn: ({ signal }) => fetchDeviceChartPreferences(signal),
       staleTime: 60_000,
     }),
+  charts: (request: DeviceChartsQueryRequest) =>
+    queryOptions({
+      queryKey: devicesQueryKeys.charts(request),
+      queryFn: ({ signal }) => fetchDeviceCharts(request, signal),
+      enabled: request.charts.length > 0,
+      staleTime: 30_000,
+    }),
 }
 
 export function useDevicesQuery(params: DevicesListParams) {
@@ -37,4 +51,8 @@ export function useDevicesQuery(params: DevicesListParams) {
 
 export function useDeviceChartPreferencesQuery() {
   return useQuery(devicesQueries.chartPreferences())
+}
+
+export function useDeviceChartsQuery(request: DeviceChartsQueryRequest) {
+  return useQuery(devicesQueries.charts(request))
 }
