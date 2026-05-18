@@ -1,5 +1,9 @@
 import { Button } from "@/base/ui/button"
-import { DataTable, type DataTableColumn } from "@/components/data-table"
+import {
+  DataTable,
+  useDataTableRowSelection,
+  type DataTableColumn,
+} from "@/components/data-table"
 
 import {
   DEVICE_COMPLIANCE_STATUS_OPTIONS,
@@ -96,6 +100,8 @@ export function DevicesPageTable({
   onPageSizeChange,
   onRefresh,
 }: DevicesPageTableProps) {
+  const { rowSelection, onRowSelectionChange } = useDataTableRowSelection()
+
   return (
     <DataTable
       columns={deviceColumns}
@@ -106,6 +112,10 @@ export function DevicesPageTable({
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
       onRefresh={onRefresh}
+      selection={{
+        rowSelection,
+        onRowSelectionChange,
+      }}
     />
   )
 }

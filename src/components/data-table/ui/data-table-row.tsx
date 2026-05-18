@@ -15,7 +15,7 @@ type DataTableRowProps<TData> = {
 
 export function DataTableRow<TData>({ row }: DataTableRowProps<TData>) {
   return (
-    <TableRow>
+    <TableRow data-state={row.getIsSelected() ? "selected" : undefined}>
       {row.getVisibleCells().map((cell) => {
         const meta = getColumnMeta(cell.column.columnDef)
         const align = meta?.align ?? "left"

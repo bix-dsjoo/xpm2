@@ -9,6 +9,7 @@ import { cn } from "@/base/lib/utils"
 import { Table, TableBody, TableHeader } from "@/base/ui/table"
 
 import { createDataTableColumns } from "../lib/create-columns"
+import { createDataTableSelectionColumn } from "../lib/create-selection-column"
 import type { DataTableProps } from "../model/types"
 import { DataTableHeaderGroup } from "./data-table-header-group"
 import { DataTableRow } from "./data-table-row"
@@ -28,6 +29,7 @@ export function DataTable<TData>({
   loading = false,
 
   getRowId,
+  selection,
 
   className,
 
@@ -39,10 +41,21 @@ export function DataTable<TData>({
   onPageSizeChange,
   onRefresh,
 }: DataTableProps<TData>) {
-  const columnDefs = React.useMemo<ColumnDef<TData>[]>(
-    () => createDataTableColumns(columns),
-    [columns]
-  )
+  const hasSelection = Boolean(selection)
+  const selectionMode = selection?.mode ?? "multiple"
+
+  const columnDefs = React.useMemo<ColumnDef<TData>[]>(() => {
+    const dataColumns = createDataTableColumns(columns)
+
+    if (!hasSelection) {
+      return dataColumns
+    }
+
+    return [
+      createDataTableSelectionColumn({ mode: selectionMode }),
+      ...dataColumns,
+    ]
+  }, [columns, hasSelection, selectionMode])
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -50,9 +63,17 @@ export function DataTable<TData>({
     columns: columnDefs,
     getRowId,
     getCoreRowModel: getCoreRowModel(),
+    state: {
+      rowSelection: selection?.rowSelection,
+    },
+    onRowSelectionChange: selection?.onRowSelectionChange,
+    enableRowSelection: selection?.enableRowSelection,
+    enableMultiRowSelection: selectionMode === "multiple",
   })
 
   const rows = table.getRowModel().rows
+  const visibleColumns = table.getVisibleLeafColumns()
+  const visibleColumnCount = visibleColumns.length
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
@@ -82,9 +103,9 @@ export function DataTable<TData>({
 
           <TableBody>
             {loading ? (
-              <DataTableSkeletonRows columns={columns} />
+              <DataTableSkeletonRows columns={visibleColumns} />
             ) : rows.length === 0 ? (
-              <DataTableEmptyRow colSpan={columns.length} />
+              <DataTableEmptyRow colSpan={visibleColumnCount} />
             ) : (
               rows.map((row) => <DataTableRow key={row.id} row={row} />)
             )}

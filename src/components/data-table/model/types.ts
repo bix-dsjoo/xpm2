@@ -1,5 +1,10 @@
 import type { ReactNode } from "react"
-import type { CellContext } from "@tanstack/react-table"
+import type {
+  CellContext,
+  OnChangeFn,
+  Row,
+  RowSelectionState,
+} from "@tanstack/react-table"
 
 import type { Option } from "@/base/model/types"
 import type { LucideIcon } from "lucide-react"
@@ -113,6 +118,26 @@ export type DataTablePaginationState = {
   totalPages: number
 }
 
+/**
+ * 행 선택 방식.
+ *
+ * 기본값은 `"multiple"`이다.
+ * `"single"`을 사용하면 한 번에 하나의 행만 선택하고, 헤더의 전체 선택 체크박스는 표시하지 않는다.
+ */
+export type DataTableSelectionMode = "single" | "multiple"
+
+/**
+ * 행 선택 설정.
+ *
+ * `mode` 기본값은 `"multiple"`이다.
+ */
+export type DataTableSelection<TData> = {
+  mode?: DataTableSelectionMode
+  rowSelection?: RowSelectionState
+  onRowSelectionChange?: OnChangeFn<RowSelectionState>
+  enableRowSelection?: boolean | ((row: Row<TData>) => boolean)
+}
+
 export type DataTableProps<TData> = {
   columns: DataTableColumn<TData>[]
   data?: TData[]
@@ -120,6 +145,8 @@ export type DataTableProps<TData> = {
   loading?: boolean
 
   getRowId?: (row: TData, index: number) => string
+
+  selection?: DataTableSelection<TData>
 
   className?: string
 
