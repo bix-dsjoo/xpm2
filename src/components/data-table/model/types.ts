@@ -111,11 +111,16 @@ export type DataTableColumnMeta = {
   contentClassName?: string
 }
 
-export type DataTablePaginationState = {
+export type DataTablePaginationMeta = {
   page: number
   pageSize: number
-  totalItems: number
-  totalPages: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export type DataTablePagination = DataTablePaginationMeta & {
+  onPageChange?: (page: number) => void
+  onPageSizeChange?: (pageSize: number) => void
 }
 
 /**
@@ -154,8 +159,6 @@ export type DataTableProps<TData> = {
   emptyTitle?: string
   emptyDescription?: string
 
-  pagination?: DataTablePaginationState
-  onPageChange?: (page: number) => void
-  onPageSizeChange?: (pageSize: number) => void
+  pagination?: DataTablePagination
   onRefresh?: () => void
 }

@@ -1,17 +1,16 @@
-import type { DataTablePaginationState } from "../model/types"
+import type { DataTablePaginationMeta } from "../model/types"
 
 export function getDataTableRangeDescription(
-  pagination?: DataTablePaginationState
+  pagination?: DataTablePaginationMeta
 ) {
-  if (!pagination || pagination.totalItems === 0) {
+  const totalItems = pagination?.totalItems ?? 0
+
+  if (!pagination || totalItems === 0) {
     return "(0 of 0)"
   }
 
   const start = (pagination.page - 1) * pagination.pageSize + 1
-  const end = Math.min(
-    pagination.page * pagination.pageSize,
-    pagination.totalItems
-  )
+  const end = Math.min(pagination.page * pagination.pageSize, totalItems)
 
-  return `(${start}-${end} of ${pagination.totalItems})`
+  return `(${start}-${end} of ${totalItems})`
 }

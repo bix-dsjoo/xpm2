@@ -1,12 +1,12 @@
 import * as React from "react"
 import type { RowSelectionState } from "@tanstack/react-table"
 
-export type Props = {
-  initialSelectedRowIds?: string[]
-}
-
 function createRowSelectionState(rowIds: string[]): RowSelectionState {
   return Object.fromEntries(rowIds.map((rowId) => [rowId, true]))
+}
+
+export type Props = {
+  initialSelectedRowIds?: string[]
 }
 
 export function useDataTableRowSelection({
@@ -48,3 +48,7 @@ export function useDataTableRowSelection({
     clearRowSelection,
   }
 }
+
+export type UseDataTableRowSelectionReturn = ReturnType<
+  typeof useDataTableRowSelection
+>

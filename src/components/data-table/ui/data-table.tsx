@@ -37,8 +37,6 @@ export function DataTable<TData>({
   emptyTitle,
   emptyDescription,
 
-  onPageChange,
-  onPageSizeChange,
   onRefresh,
 }: DataTableProps<TData>) {
   const hasSelection = Boolean(selection)
@@ -79,8 +77,6 @@ export function DataTable<TData>({
     <div className="flex flex-1 flex-col overflow-hidden">
       <DataTableToolbar
         pagination={pagination}
-        onPageChange={onPageChange}
-        onPageSizeChange={onPageSizeChange}
         onRefresh={onRefresh}
         loading={loading}
       />

@@ -1,26 +1,17 @@
-import * as React from "react"
+import { useDataTablePagination } from "@/components/data-table"
 
 import { useDevicesQuery } from "../model/queries"
 import { ChartPieDonut } from "./devices-page-chart-pie-donut"
 import { ChartBarDefault } from "./devices-page-chart-bar-default"
 import { DevicesPageTable } from "./devices-page-table"
 
-const DEFAULT_PAGE = 1
-const DEFAULT_PAGE_SIZE = 25
-
 export const DevicesPage = () => {
-  const [page, setPage] = React.useState(DEFAULT_PAGE)
-  const [pageSize, setPageSize] = React.useState(DEFAULT_PAGE_SIZE)
+  const pagination = useDataTablePagination()
 
   const { data, isFetching, refetch } = useDevicesQuery({
-    page,
-    pageSize,
+    page: pagination.page,
+    pageSize: pagination.pageSize,
   })
-
-  const handlePageSizeChange = React.useCallback((nextPageSize: number) => {
-    setPage(DEFAULT_PAGE)
-    setPageSize(nextPageSize)
-  }, [])
 
   return (
     <main className="flex h-svh flex-col gap-6 p-6">
@@ -33,10 +24,8 @@ export const DevicesPage = () => {
 
       <DevicesPageTable
         data={data?.data}
-        pagination={data?.pagination}
+        pagination={{ ...pagination, ...data?.pagination }}
         loading={isFetching}
-        onPageChange={setPage}
-        onPageSizeChange={handlePageSizeChange}
         onRefresh={() => {
           void refetch()
         }}

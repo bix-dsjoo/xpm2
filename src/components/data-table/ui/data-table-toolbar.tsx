@@ -6,24 +6,16 @@ import { DataTableTitle } from "./data-table-title"
 import { DataTablePageSizeSelect } from "./data-table-page-size-select"
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableActions } from "./data-table-actions"
-import type { DataTablePaginationState } from "../model/types"
+import type { DataTablePagination as DataTablePaginationConfig } from "../model/types"
 import { getDataTableRangeDescription } from "../lib/get-range-description"
 
-type DataTableToolbarProps = {
-  pagination?: DataTablePaginationState
+type Props = {
+  pagination?: DataTablePaginationConfig
   loading: boolean
-  onPageChange?: (page: number) => void
-  onPageSizeChange?: (pageSize: number) => void
   onRefresh?: () => void
 }
 
-export function DataTableToolbar({
-  pagination,
-  loading,
-  onPageChange,
-  onPageSizeChange,
-  onRefresh,
-}: DataTableToolbarProps) {
+export function DataTableToolbar({ pagination, loading, onRefresh }: Props) {
   return (
     <header className="flex items-center justify-between p-2">
       <div className="flex items-center gap-2">
@@ -32,17 +24,17 @@ export function DataTableToolbar({
           description={getDataTableRangeDescription(pagination)}
         />
 
-        {pagination && onPageSizeChange && (
+        {pagination?.onPageSizeChange && (
           <DataTablePageSizeSelect
             pageSize={pagination.pageSize}
-            onPageSizeChange={onPageSizeChange}
+            onPageSizeChange={pagination.onPageSizeChange}
           />
         )}
 
-        {pagination && onPageChange && (
+        {pagination?.onPageChange && (
           <DataTablePagination
             pagination={pagination}
-            onPageChange={onPageChange}
+            onPageChange={pagination.onPageChange}
           />
         )}
 

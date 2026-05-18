@@ -3,6 +3,7 @@ import {
   DataTable,
   useDataTableRowSelection,
   type DataTableColumn,
+  type DataTablePagination,
 } from "@/components/data-table"
 
 import {
@@ -10,7 +11,6 @@ import {
   DEVICE_CONNECTION_STATUS_OPTIONS,
   DEVICE_STATE_OPTIONS,
   type Device,
-  type DevicesPagination,
 } from "../model/types"
 
 const deviceColumns = [
@@ -85,10 +85,8 @@ const deviceColumns = [
 
 type DevicesPageTableProps = {
   data?: Device[]
-  pagination?: DevicesPagination
+  pagination?: DataTablePagination
   loading: boolean
-  onPageChange: (page: number) => void
-  onPageSizeChange: (pageSize: number) => void
   onRefresh: () => void
 }
 
@@ -96,26 +94,19 @@ export function DevicesPageTable({
   data,
   pagination,
   loading,
-  onPageChange,
-  onPageSizeChange,
   onRefresh,
 }: DevicesPageTableProps) {
-  const { rowSelection, onRowSelectionChange } = useDataTableRowSelection()
+  const selection = useDataTableRowSelection()
 
   return (
     <DataTable
       columns={deviceColumns}
       data={data}
       pagination={pagination}
+      selection={selection}
       loading={loading}
       getRowId={(row) => row.deviceId}
-      onPageChange={onPageChange}
-      onPageSizeChange={onPageSizeChange}
       onRefresh={onRefresh}
-      selection={{
-        rowSelection,
-        onRowSelectionChange,
-      }}
     />
   )
 }
