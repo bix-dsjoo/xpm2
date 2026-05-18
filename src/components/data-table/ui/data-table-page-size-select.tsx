@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Button } from "@/base/ui/button"
 import { ButtonGroup } from "@/base/ui/button-group"
 import {
@@ -9,7 +10,6 @@ import {
   SelectValue,
 } from "@/base/ui/select"
 import { PAGE_SIZE_OPTIONS } from "@/base/model/pagination"
-import { useState } from "react"
 
 type DataTablePageSizeSelectProps = {
   pageSize: number

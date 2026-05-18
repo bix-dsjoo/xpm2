@@ -1,5 +1,5 @@
 export { DataTable } from "./ui/data-table"
-export { useDataTablePagination } from "./model/use-pagination"
+export { useDataTablePageParams } from "./model/use-page-params"
 export { useDataTableRowSelection } from "./model/use-row-selection"
 
 export type {

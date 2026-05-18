@@ -10,7 +10,7 @@ type Props = {
   initialPageSize?: number
 }
 
-export function useDataTablePagination({
+export function useDataTablePageParams({
   initialPage = DEFAULT_PAGE,
   initialPageSize = DEFAULT_PAGE_SIZE,
 }: Props = {}) {
@@ -25,8 +25,6 @@ export function useDataTablePagination({
   return {
     page,
     pageSize,
-    totalPages: 0,
-    totalItems: 0,
     setPage,
     setPageSize,
     onPageChange: setPage,

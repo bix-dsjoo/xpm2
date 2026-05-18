@@ -7,11 +7,11 @@ import type {
 } from "@tanstack/react-table"
 
 import type { Option } from "@/base/model/types"
-import type { LucideIcon } from "lucide-react"
 import type { PaginationMeta } from "@/base/model/pagination"
+import type { LucideIcon } from "lucide-react"
 
 /**
- * 셀 표시 방식.
+ * 셀 값을 표시하는 기본 형식.
  */
 export type DataTableColumnType =
   | "text"
@@ -23,7 +23,7 @@ export type DataTableColumnType =
   | "array"
 
 /**
- * 컬럼 정렬 방향.
+ * 컬럼 콘텐츠 정렬 방향.
  */
 export type DataTableAlign = "left" | "center" | "right"
 
@@ -37,27 +37,27 @@ type BaseColumn<TData> = {
   contentClassName?: string
 
   /**
-   * 셀 표시 방식.
+   * 셀 값 표시 형식.
    *
-   * 기본값: `"text"`
+   * 기본값은 `"text"`.
    */
   type?: DataTableColumnType
 
   /**
-   * 옵션 컬럼의 표시 목록.
+   * 옵션 컬럼에서 값에 대응되는 표시 정보.
    *
    * `type: "option"`일 때 사용.
    */
   options?: Option[]
 
   /**
-   * 기본 포맷 대신 셀 렌더링을 직접 지정.
+   * 기본 포맷 대신 사용할 셀 렌더러.
    */
   cell?: (ctx: CellContext<TData, unknown>) => ReactNode
 }
 
 /**
- * row의 필드를 그대로 읽는 컬럼.
+ * row 필드를 그대로 읽는 컬럼.
  */
 export type KeyColumn<TData> = BaseColumn<TData> & {
   /**
@@ -71,22 +71,22 @@ export type KeyColumn<TData> = BaseColumn<TData> & {
  */
 export type AccessorColumn<TData> = BaseColumn<TData> & {
   /**
-   * 계산 컬럼의 안정적인 ID.
+   * 계산 컬럼을 식별하는 안정적인 ID.
    */
   id: string
 
   /**
-   * row에서 셀 값을 계산.
+   * row에서 표시할 값을 계산.
    */
   accessorFn: (row: TData, index: number) => unknown
 }
 
 /**
- * 값을 읽지 않고 셀을 직접 렌더링하는 컬럼.
+ * 값을 읽지 않고 직접 렌더링하는 컬럼.
  */
 type DisplayColumn<TData> = BaseColumn<TData> & {
   /**
-   * 직접 렌더링 컬럼의 안정적인 ID.
+   * 직접 렌더링 컬럼을 식별하는 안정적인 ID.
    */
   id: string
 
@@ -120,15 +120,12 @@ export type DataTablePagination = PaginationMeta & {
 /**
  * 행 선택 방식.
  *
- * 기본값은 `"multiple"`이다.
- * `"single"`을 사용하면 한 번에 하나의 행만 선택하고, 헤더의 전체 선택 체크박스는 표시하지 않는다.
+ * 기본값은 `"multiple"`.
  */
 export type DataTableSelectionMode = "single" | "multiple"
 
 /**
  * 행 선택 설정.
- *
- * `mode` 기본값은 `"multiple"`이다.
  */
 export type DataTableSelection<TData> = {
   mode?: DataTableSelectionMode

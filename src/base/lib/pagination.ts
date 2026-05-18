@@ -1,9 +1,7 @@
 import {
   DEFAULT_PAGE,
   DEFAULT_PAGE_SIZE,
-  PAGE_SIZE_OPTIONS,
-  type PageSizeOption,
-  type PaginatedResponse,
+  type PaginatedList,
   type PaginationParams,
 } from "@/base/model/pagination"
 
@@ -29,16 +27,14 @@ export function getPaginationParams(
 
   return {
     page,
-    pageSize: PAGE_SIZE_OPTIONS.includes(pageSize as PageSizeOption)
-      ? pageSize
-      : DEFAULT_PAGE_SIZE,
+    pageSize,
   }
 }
 
 export function paginateItems<T>(
   items: T[],
   params: PaginationParams
-): PaginatedResponse<T> {
+): PaginatedList<T> {
   const totalItems = items.length
   const totalPages = Math.ceil(totalItems / params.pageSize)
   const page =

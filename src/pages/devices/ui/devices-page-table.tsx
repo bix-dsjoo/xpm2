@@ -1,105 +1,36 @@
-import { Button } from "@/base/ui/button"
 import {
   DataTable,
-  useDataTablePagination,
+  useDataTablePageParams,
   useDataTableRowSelection,
-  type DataTableColumn,
 } from "@/components/data-table"
 
-import { type Device } from "../model/types"
+import { deviceTableColumns } from "../config/device-table-columns"
 import { useDevicesQuery } from "../model/queries"
-import {
-  DEVICE_COMPLIANCE_STATUS_OPTIONS,
-  DEVICE_CONNECTION_STATUS_OPTIONS,
-  DEVICE_STATE_OPTIONS,
-} from "../model/enums"
-
-const deviceColumns = [
-  {
-    key: "deviceName",
-    header: "DEVICE NAME",
-    cell: ({ getValue }) => (
-      <Button className={"px-0"} variant="link">
-        {getValue<string>()}
-      </Button>
-    ),
-  },
-  {
-    key: "deviceType",
-    header: "DEVICE TYPE",
-  },
-  {
-    key: "complianceStatus",
-    header: "COMPLIANCE STATUS",
-    type: "option",
-    options: DEVICE_COMPLIANCE_STATUS_OPTIONS,
-  },
-  {
-    key: "deviceState",
-    header: "DEVICE STATE",
-    type: "option",
-    options: DEVICE_STATE_OPTIONS,
-  },
-  {
-    key: "connectionStatus",
-    header: "CONNECTION STATUS",
-    type: "option",
-    options: DEVICE_CONNECTION_STATUS_OPTIONS,
-  },
-  {
-    key: "lastConnectionStatusChange",
-    header: "LAST CONNECTION STATUS CHANGE",
-    type: "date-time",
-  },
-  {
-    key: "activeIpAddress",
-    header: "ACTIVE IP ADDRESS",
-  },
-  {
-    key: "activeProtocol",
-    header: "ACTIVE PROTOCOL",
-  },
-  {
-    key: "supportedProtocols",
-    header: "SUPPORTED PROTOCOLS",
-    type: "array",
-  },
-  {
-    key: "protocolAdapter",
-    header: "PROTOCOL ADAPTER",
-  },
-  {
-    key: "protocolInstance",
-    header: "PROTOCOL INSTANCE",
-  },
-  {
-    key: "groups",
-    header: "GROUPS",
-    type: "array",
-  },
-  {
-    key: "groupPaths",
-    header: "GROUP PATHS",
-    type: "array",
-  },
-] satisfies DataTableColumn<Device>[]
 
 export function DevicesPageTable() {
-  const pagination = useDataTablePagination()
+  const paginationState = useDataTablePageParams()
 
   const { data, isFetching, refetch } = useDevicesQuery({
-    page: pagination.page,
-    pageSize: pagination.pageSize,
+    page: paginationState.page,
+    pageSize: paginationState.pageSize,
   })
 
   const selection = useDataTableRowSelection()
+  const paginationMeta = data?.pagination
 
   return (
     <DataTable
       title="Devices"
-      columns={deviceColumns}
+      columns={deviceTableColumns}
       data={data?.items}
-      pagination={{ ...pagination, ...data?.pagination }}
+      pagination={{
+        page: paginationState.page,
+        pageSize: paginationState.pageSize,
+        totalItems: paginationMeta?.totalItems ?? 0,
+        totalPages: paginationMeta?.totalPages ?? 0,
+        onPageChange: paginationState.onPageChange,
+        onPageSizeChange: paginationState.onPageSizeChange,
+      }}
       selection={selection}
       loading={isFetching}
       getRowId={(row) => row.id}
