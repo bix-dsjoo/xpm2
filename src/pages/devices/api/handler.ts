@@ -1,6 +1,7 @@
 import { delay, http, HttpResponse } from "msw"
 
-import { DEVICES_API_PATH } from "./api"
+import { DEVICE_CHART_PREFERENCES_API_PATH, DEVICES_API_PATH } from "./api"
+import type { DeviceChartPreferencesResult } from "./dto"
 import type { Device } from "../model/types"
 
 const DEFAULT_PAGE = 1
@@ -46,6 +47,29 @@ function getPaginatedDevices(request: Request, source: Device[]) {
       totalPages,
     },
   }
+}
+
+const chartPreferences: DeviceChartPreferencesResult = {
+  charts: [
+    {
+      id: "0",
+      chartType: "donut",
+      query: {
+        field: "deviceType",
+        limit: 15,
+      },
+    },
+    {
+      id: "1",
+      chartType: "bar",
+      query: {
+        field: "lastConnectionStatusChange",
+        limit: 7,
+        interval: "day",
+        timeZone: "+09:00",
+      },
+    },
+  ],
 }
 
 const devices: Device[] = [
@@ -856,5 +880,11 @@ export const devicesHandlers = [
     await delay(1000)
 
     return HttpResponse.json(getPaginatedDevices(request, devices))
+  }),
+
+  http.get(DEVICE_CHART_PREFERENCES_API_PATH, async () => {
+    await delay(500)
+
+    return HttpResponse.json(chartPreferences)
   }),
 ]

@@ -15,7 +15,6 @@ export type ChartInterval =
   | "year"
 
 export type ChartQuery<TField extends string = string> = {
-  id: string
   field: TField
   limit: number
   interval?: ChartInterval
