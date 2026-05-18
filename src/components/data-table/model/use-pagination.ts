@@ -1,12 +1,14 @@
 import * as React from "react"
 
+import {
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+} from "@/base/model/pagination"
+
 type Props = {
   initialPage?: number
   initialPageSize?: number
 }
-
-const DEFAULT_PAGE = 1
-const DEFAULT_PAGE_SIZE = 25
 
 export function useDataTablePagination({
   initialPage = DEFAULT_PAGE,
@@ -23,6 +25,8 @@ export function useDataTablePagination({
   return {
     page,
     pageSize,
+    totalPages: 0,
+    totalItems: 0,
     setPage,
     setPageSize,
     onPageChange: setPage,

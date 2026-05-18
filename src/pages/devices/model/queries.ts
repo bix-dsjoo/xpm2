@@ -1,20 +1,17 @@
 import { keepPreviousData, queryOptions, useQuery } from "@tanstack/react-query"
 
-import { fetchDevices } from "../api/api"
+import type { PaginationParams } from "@/base/model/pagination"
 
-type DevicesListParams = {
-  page: number
-  pageSize: number
-}
+import { fetchDevices } from "../api/api"
 
 export const devicesQueryKeys = {
   all: ["devices"] as const,
-  list: (params: DevicesListParams) =>
+  list: (params: PaginationParams) =>
     [...devicesQueryKeys.all, "list", params] as const,
 }
 
 export const devicesQueries = {
-  list: (params: DevicesListParams) =>
+  list: (params: PaginationParams) =>
     queryOptions({
       queryKey: devicesQueryKeys.list(params),
       queryFn: ({ signal }) => fetchDevices({ ...params, signal }),
@@ -23,6 +20,6 @@ export const devicesQueries = {
     }),
 }
 
-export function useDevicesQuery(params: DevicesListParams) {
+export function useDevicesQuery(params: PaginationParams) {
   return useQuery(devicesQueries.list(params))
 }

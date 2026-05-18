@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/base/ui/select"
+import { PAGE_SIZE_OPTIONS } from "@/base/model/pagination"
 import { useState } from "react"
 
 type DataTablePageSizeSelectProps = {
@@ -35,10 +36,11 @@ export function DataTablePageSizeSelect({
 
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="25">25</SelectItem>
-            <SelectItem value="50">50</SelectItem>
-            <SelectItem value="75">75</SelectItem>
-            <SelectItem value="100">100</SelectItem>
+            {PAGE_SIZE_OPTIONS.map((option) => (
+              <SelectItem key={option} value={String(option)}>
+                {option}
+              </SelectItem>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>

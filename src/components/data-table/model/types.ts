@@ -8,6 +8,7 @@ import type {
 
 import type { Option } from "@/base/model/types"
 import type { LucideIcon } from "lucide-react"
+import type { PaginationMeta } from "@/base/model/pagination"
 
 /**
  * 셀 표시 방식.
@@ -111,14 +112,7 @@ export type DataTableColumnMeta = {
   contentClassName?: string
 }
 
-export type DataTablePaginationMeta = {
-  page: number
-  pageSize: number
-  totalItems?: number
-  totalPages?: number
-}
-
-export type DataTablePagination = DataTablePaginationMeta & {
+export type DataTablePagination = PaginationMeta & {
   onPageChange?: (page: number) => void
   onPageSizeChange?: (pageSize: number) => void
 }

@@ -1,56 +1,19 @@
 import { delay, http, HttpResponse } from "msw"
 
+import { getPaginationParams, paginateItems } from "@/base/lib/pagination"
+
 import { DEVICES_API_PATH } from "./api"
 import type { Device } from "../model/types"
 
-const DEFAULT_PAGE = 1
-const DEFAULT_PAGE_SIZE = 25
-const PAGE_SIZE_OPTIONS = [25, 50, 75, 100] as const
-
-function getNumberParam(
-  searchParams: URLSearchParams,
-  key: string,
-  defaultValue: number
-) {
-  const value = Number(searchParams.get(key))
-
-  return Number.isInteger(value) && value > 0 ? value : defaultValue
-}
-
-function getPageSize(searchParams: URLSearchParams) {
-  const pageSize = getNumberParam(searchParams, "pageSize", DEFAULT_PAGE_SIZE)
-
-  return PAGE_SIZE_OPTIONS.includes(
-    pageSize as (typeof PAGE_SIZE_OPTIONS)[number]
-  )
-    ? pageSize
-    : DEFAULT_PAGE_SIZE
-}
-
 function getPaginatedDevices(request: Request, source: Device[]) {
   const url = new URL(request.url)
-  const pageSize = getPageSize(url.searchParams)
-  const totalItems = source.length
-  const totalPages = Math.ceil(totalItems / pageSize)
-  const requestedPage = getNumberParam(url.searchParams, "page", DEFAULT_PAGE)
-  const page =
-    totalPages === 0 ? DEFAULT_PAGE : Math.min(requestedPage, totalPages)
-  const startIndex = (page - 1) * pageSize
 
-  return {
-    data: source.slice(startIndex, startIndex + pageSize),
-    pagination: {
-      page,
-      pageSize,
-      totalItems,
-      totalPages,
-    },
-  }
+  return paginateItems(source, getPaginationParams(url.searchParams))
 }
 
 const devices: Device[] = [
   {
-    deviceId: "1",
+    id: "1",
     deviceName: "Seoul-OUT-XL5-40CT-001",
     deviceType: "Bixolon XL Printer Series v4",
     complianceStatus: "Compliant",
@@ -66,7 +29,7 @@ const devices: Device[] = [
     activeIpAddress: "10.40.10.21",
   },
   {
-    deviceId: "2",
+    id: "2",
     deviceName: "Seoul-OUT-XD7-20D-002",
     deviceType: "Bixolon XD7 Printer Series v4",
     complianceStatus: "Compliant",
@@ -82,7 +45,7 @@ const devices: Device[] = [
     activeIpAddress: "10.40.10.22",
   },
   {
-    deviceId: "3",
+    id: "3",
     deviceName: "Seoul-IN-SRP-S300II-003",
     deviceType: "Bixolon SRP Printer Series v2",
     complianceStatus: "Compliant",
@@ -98,7 +61,7 @@ const devices: Device[] = [
     activeIpAddress: "10.40.11.23",
   },
   {
-    deviceId: "4",
+    id: "4",
     deviceName: "Seoul-IN-RK95-004",
     deviceType: "Barcode Scanner",
     complianceStatus: "Compliant",
@@ -114,7 +77,7 @@ const devices: Device[] = [
     activeIpAddress: "10.40.11.24",
   },
   {
-    deviceId: "5",
+    id: "5",
     deviceName: "Seoul-PACK-TAB-ACTIVE5-005",
     deviceType: "Rugged Tablet",
     complianceStatus: "Compliant",
@@ -130,7 +93,7 @@ const devices: Device[] = [
     activeIpAddress: "10.40.12.25",
   },
   {
-    deviceId: "6",
+    id: "6",
     deviceName: "Seoul-PACK-PM45-006",
     deviceType: "Honeywell Label Printer",
     complianceStatus: "Pending",
@@ -146,7 +109,7 @@ const devices: Device[] = [
     activeIpAddress: "10.40.12.26",
   },
   {
-    deviceId: "7",
+    id: "7",
     deviceName: "Seoul-QA-MEMOR12-007",
     deviceType: "Mobile Computer",
     complianceStatus: "Compliant",
@@ -162,7 +125,7 @@ const devices: Device[] = [
     activeIpAddress: "10.40.13.27",
   },
   {
-    deviceId: "8",
+    id: "8",
     deviceName: "Seoul-QA-XM7-40R-008",
     deviceType: "Bixolon XM7 Printer Series v4",
     complianceStatus: "Compliant",
@@ -178,7 +141,7 @@ const devices: Device[] = [
     activeIpAddress: "10.40.13.28",
   },
   {
-    deviceId: "9",
+    id: "9",
     deviceName: "Busan-OUT-ZT411-009",
     deviceType: "Zebra Industrial Printer",
     complianceStatus: "Compliant",
@@ -194,7 +157,7 @@ const devices: Device[] = [
     activeIpAddress: "10.41.10.31",
   },
   {
-    deviceId: "10",
+    id: "10",
     deviceName: "Busan-OUT-XL5-40CT-010",
     deviceType: "Bixolon XL Printer Series v4",
     complianceStatus: "Compliant",
@@ -210,7 +173,7 @@ const devices: Device[] = [
     activeIpAddress: "10.41.10.32",
   },
   {
-    deviceId: "11",
+    id: "11",
     deviceName: "Busan-IN-RK95-011",
     deviceType: "Barcode Scanner",
     complianceStatus: "Compliant",
@@ -226,7 +189,7 @@ const devices: Device[] = [
     activeIpAddress: "10.41.11.33",
   },
   {
-    deviceId: "12",
+    id: "12",
     deviceName: "Busan-IN-SRP-S300II-012",
     deviceType: "Bixolon SRP Printer Series v2",
     complianceStatus: "Compliant",
@@ -242,7 +205,7 @@ const devices: Device[] = [
     activeIpAddress: "10.41.11.34",
   },
   {
-    deviceId: "13",
+    id: "13",
     deviceName: "Busan-PACK-TAB-ACTIVE5-013",
     deviceType: "Rugged Tablet",
     complianceStatus: "Pending",
@@ -258,7 +221,7 @@ const devices: Device[] = [
     activeIpAddress: "10.41.12.35",
   },
   {
-    deviceId: "14",
+    id: "14",
     deviceName: "Busan-PACK-PM45-014",
     deviceType: "Honeywell Label Printer",
     complianceStatus: "Compliant",
@@ -274,7 +237,7 @@ const devices: Device[] = [
     activeIpAddress: "10.41.12.36",
   },
   {
-    deviceId: "15",
+    id: "15",
     deviceName: "Incheon-RET-KIOSK-015",
     deviceType: "Android Kiosk",
     complianceStatus: "Compliant",
@@ -290,7 +253,7 @@ const devices: Device[] = [
     activeIpAddress: "10.42.20.41",
   },
   {
-    deviceId: "16",
+    id: "16",
     deviceName: "Incheon-RET-SPP-L410-016",
     deviceType: "Mobile Printer",
     complianceStatus: "Compliant",
@@ -306,7 +269,7 @@ const devices: Device[] = [
     activeIpAddress: "10.42.20.42",
   },
   {
-    deviceId: "17",
+    id: "17",
     deviceName: "Incheon-STOCK-MEMOR12-017",
     deviceType: "Mobile Computer",
     complianceStatus: "Compliant",
@@ -322,7 +285,7 @@ const devices: Device[] = [
     activeIpAddress: "10.42.21.43",
   },
   {
-    deviceId: "18",
+    id: "18",
     deviceName: "Incheon-STOCK-XD7-20D-018",
     deviceType: "Bixolon XD7 Printer Series v4",
     complianceStatus: "NonCompliant",
@@ -338,7 +301,7 @@ const devices: Device[] = [
     activeIpAddress: "",
   },
   {
-    deviceId: "19",
+    id: "19",
     deviceName: "Daejeon-SVC-RELAY-019",
     deviceType: "SOTI Gateway",
     complianceStatus: "Compliant",
@@ -354,7 +317,7 @@ const devices: Device[] = [
     activeIpAddress: "10.43.30.51",
   },
   {
-    deviceId: "20",
+    id: "20",
     deviceName: "Daejeon-SVC-PM45-020",
     deviceType: "Honeywell Label Printer",
     complianceStatus: "Compliant",
@@ -370,7 +333,7 @@ const devices: Device[] = [
     activeIpAddress: "10.43.30.52",
   },
   {
-    deviceId: "21",
+    id: "21",
     deviceName: "Daejeon-SVC-RK95-021",
     deviceType: "Barcode Scanner",
     complianceStatus: "Compliant",
@@ -386,7 +349,7 @@ const devices: Device[] = [
     activeIpAddress: "10.43.30.53",
   },
   {
-    deviceId: "22",
+    id: "22",
     deviceName: "Daegu-RET-KIOSK-022",
     deviceType: "Android Kiosk",
     complianceStatus: "Pending",
@@ -402,7 +365,7 @@ const devices: Device[] = [
     activeIpAddress: "10.44.20.61",
   },
   {
-    deviceId: "23",
+    id: "23",
     deviceName: "Daegu-RET-SPP-L410-023",
     deviceType: "Mobile Printer",
     complianceStatus: "Compliant",
@@ -418,7 +381,7 @@ const devices: Device[] = [
     activeIpAddress: "10.44.20.62",
   },
   {
-    deviceId: "24",
+    id: "24",
     deviceName: "Daegu-STOCK-MEMOR12-024",
     deviceType: "Mobile Computer",
     complianceStatus: "Compliant",
@@ -434,7 +397,7 @@ const devices: Device[] = [
     activeIpAddress: "10.44.21.63",
   },
   {
-    deviceId: "25",
+    id: "25",
     deviceName: "Gwangju-RET-KIOSK-025",
     deviceType: "Android Kiosk",
     complianceStatus: "Compliant",
@@ -450,7 +413,7 @@ const devices: Device[] = [
     activeIpAddress: "10.45.20.71",
   },
   {
-    deviceId: "26",
+    id: "26",
     deviceName: "Gwangju-RET-XM7-40R-026",
     deviceType: "Bixolon XM7 Printer Series v4",
     complianceStatus: "Compliant",
@@ -466,7 +429,7 @@ const devices: Device[] = [
     activeIpAddress: "10.45.20.72",
   },
   {
-    deviceId: "27",
+    id: "27",
     deviceName: "Gwangju-STOCK-RK95-027",
     deviceType: "Barcode Scanner",
     complianceStatus: "Compliant",
@@ -482,7 +445,7 @@ const devices: Device[] = [
     activeIpAddress: "10.45.21.73",
   },
   {
-    deviceId: "28",
+    id: "28",
     deviceName: "Suwon-QA-TAB-ACTIVE5-028",
     deviceType: "Rugged Tablet",
     complianceStatus: "Compliant",
@@ -498,7 +461,7 @@ const devices: Device[] = [
     activeIpAddress: "10.46.40.81",
   },
   {
-    deviceId: "29",
+    id: "29",
     deviceName: "Suwon-QA-ZT411-029",
     deviceType: "Zebra Industrial Printer",
     complianceStatus: "Pending",
@@ -514,7 +477,7 @@ const devices: Device[] = [
     activeIpAddress: "10.46.40.82",
   },
   {
-    deviceId: "30",
+    id: "30",
     deviceName: "Suwon-QA-MEMOR12-030",
     deviceType: "Mobile Computer",
     complianceStatus: "Compliant",
@@ -530,7 +493,7 @@ const devices: Device[] = [
     activeIpAddress: "10.46.40.83",
   },
   {
-    deviceId: "31",
+    id: "31",
     deviceName: "Ulsan-MFG-SCALE-031",
     deviceType: "Warehouse Scale",
     complianceStatus: "NotApplicable",
@@ -546,7 +509,7 @@ const devices: Device[] = [
     activeIpAddress: "",
   },
   {
-    deviceId: "32",
+    id: "32",
     deviceName: "Ulsan-MFG-XL5-40CT-032",
     deviceType: "Bixolon XL Printer Series v4",
     complianceStatus: "Compliant",
@@ -562,7 +525,7 @@ const devices: Device[] = [
     activeIpAddress: "10.47.50.91",
   },
   {
-    deviceId: "33",
+    id: "33",
     deviceName: "Ulsan-MFG-TAB-ACTIVE5-033",
     deviceType: "Rugged Tablet",
     complianceStatus: "Compliant",
@@ -578,7 +541,7 @@ const devices: Device[] = [
     activeIpAddress: "10.47.51.92",
   },
   {
-    deviceId: "34",
+    id: "34",
     deviceName: "Ulsan-MFG-XD7-20D-034",
     deviceType: "Bixolon XD7 Printer Series v4",
     complianceStatus: "Compliant",
@@ -594,7 +557,7 @@ const devices: Device[] = [
     activeIpAddress: "10.47.51.93",
   },
   {
-    deviceId: "35",
+    id: "35",
     deviceName: "Jeju-RET-KIOSK-035",
     deviceType: "Android Kiosk",
     complianceStatus: "Compliant",
@@ -610,7 +573,7 @@ const devices: Device[] = [
     activeIpAddress: "10.48.20.101",
   },
   {
-    deviceId: "36",
+    id: "36",
     deviceName: "Jeju-RET-SPP-L410-036",
     deviceType: "Mobile Printer",
     complianceStatus: "Compliant",
@@ -626,7 +589,7 @@ const devices: Device[] = [
     activeIpAddress: "10.48.20.102",
   },
   {
-    deviceId: "37",
+    id: "37",
     deviceName: "Jeju-STOCK-MEMOR12-037",
     deviceType: "Mobile Computer",
     complianceStatus: "Pending",
@@ -642,7 +605,7 @@ const devices: Device[] = [
     activeIpAddress: "10.48.21.103",
   },
   {
-    deviceId: "38",
+    id: "38",
     deviceName: "Field-SVC-TAB-ACTIVE5-038",
     deviceType: "Rugged Tablet",
     complianceStatus: "Compliant",
@@ -658,7 +621,7 @@ const devices: Device[] = [
     activeIpAddress: "10.49.60.111",
   },
   {
-    deviceId: "39",
+    id: "39",
     deviceName: "Field-SVC-SPP-L410-039",
     deviceType: "Mobile Printer",
     complianceStatus: "NonCompliant",
@@ -674,7 +637,7 @@ const devices: Device[] = [
     activeIpAddress: "",
   },
   {
-    deviceId: "40",
+    id: "40",
     deviceName: "Field-SVC-RK95-040",
     deviceType: "Barcode Scanner",
     complianceStatus: "Compliant",
@@ -690,7 +653,7 @@ const devices: Device[] = [
     activeIpAddress: "10.49.60.113",
   },
   {
-    deviceId: "41",
+    id: "41",
     deviceName: "Spare-Pool-XL5-40CT-041",
     deviceType: "Bixolon XL Printer Series v4",
     complianceStatus: "NotApplicable",
@@ -706,7 +669,7 @@ const devices: Device[] = [
     activeIpAddress: "10.50.70.121",
   },
   {
-    deviceId: "42",
+    id: "42",
     deviceName: "Spare-Pool-XD7-20D-042",
     deviceType: "Bixolon XD7 Printer Series v4",
     complianceStatus: "NotApplicable",
@@ -722,7 +685,7 @@ const devices: Device[] = [
     activeIpAddress: "10.50.70.122",
   },
   {
-    deviceId: "43",
+    id: "43",
     deviceName: "NOC-GW-RELAY-043",
     deviceType: "SOTI Gateway",
     complianceStatus: "Compliant",
@@ -738,7 +701,7 @@ const devices: Device[] = [
     activeIpAddress: "10.51.80.131",
   },
   {
-    deviceId: "44",
+    id: "44",
     deviceName: "NOC-GW-RELAY-044",
     deviceType: "SOTI Gateway",
     complianceStatus: "Compliant",
@@ -754,7 +717,7 @@ const devices: Device[] = [
     activeIpAddress: "10.51.80.132",
   },
   {
-    deviceId: "45",
+    id: "45",
     deviceName: "NOC-MON-SCALE-045",
     deviceType: "Warehouse Scale",
     complianceStatus: "Pending",
@@ -770,7 +733,7 @@ const devices: Device[] = [
     activeIpAddress: "10.51.80.133",
   },
   {
-    deviceId: "46",
+    id: "46",
     deviceName: "Seoul-OUT-ZT411-046",
     deviceType: "Zebra Industrial Printer",
     complianceStatus: "Compliant",
@@ -786,7 +749,7 @@ const devices: Device[] = [
     activeIpAddress: "10.40.10.46",
   },
   {
-    deviceId: "47",
+    id: "47",
     deviceName: "Busan-PACK-XM7-40R-047",
     deviceType: "Bixolon XM7 Printer Series v4",
     complianceStatus: "Compliant",
@@ -802,7 +765,7 @@ const devices: Device[] = [
     activeIpAddress: "10.41.12.47",
   },
   {
-    deviceId: "48",
+    id: "48",
     deviceName: "Incheon-STOCK-TAB-ACTIVE5-048",
     deviceType: "Rugged Tablet",
     complianceStatus: "Compliant",
@@ -818,7 +781,7 @@ const devices: Device[] = [
     activeIpAddress: "10.42.21.48",
   },
   {
-    deviceId: "49",
+    id: "49",
     deviceName: "Daegu-STOCK-ZT411-049",
     deviceType: "Zebra Industrial Printer",
     complianceStatus: "Compliant",
@@ -834,7 +797,7 @@ const devices: Device[] = [
     activeIpAddress: "10.44.21.49",
   },
   {
-    deviceId: "50",
+    id: "50",
     deviceName: "Jeju-RET-RK95-050",
     deviceType: "Barcode Scanner",
     complianceStatus: "Compliant",
