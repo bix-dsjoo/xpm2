@@ -29,7 +29,7 @@ export const DevicesPage = () => {
           data={deviceTypeData}
           valueKey="visitors"
           categoryKey="browser"
-          variant="donut"
+          variant="radar"
         />
 
         <ChartCard
@@ -37,14 +37,7 @@ export const DevicesPage = () => {
           data={deviceTypeData}
           valueKey="visitors"
           categoryKey="browser"
-          variant="radar"
-        />
-        <ChartCard
-          title="LAST STATE UPDATE"
-          data={lastStateUpdateData}
-          valueKey="desktop"
-          categoryKey="month"
-          variant="area"
+          variant="donut"
         />
         <ChartCard
           title="LAST STATE UPDATE"
@@ -52,6 +45,13 @@ export const DevicesPage = () => {
           valueKey="desktop"
           categoryKey="month"
           variant="bar"
+        />
+        <ChartCard
+          title="LAST STATE UPDATE"
+          data={lastStateUpdateData}
+          valueKey="desktop"
+          categoryKey="month"
+          variant="area"
         />
       </div>
 
