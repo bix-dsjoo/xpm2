@@ -11,11 +11,25 @@ import { buildChartConfig } from "../lib/build-chart-config"
 import { buildChartData } from "../lib/build-chart-data"
 import { SettingsIcon } from "lucide-react"
 import { useMemo } from "react"
-import { Bar, BarChart, CartesianGrid, Pie, PieChart, XAxis } from "recharts"
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Pie,
+  PieChart,
+  PolarAngleAxis,
+  PolarGrid,
+  Radar,
+  RadarChart,
+  XAxis,
+} from "recharts"
+import type { ChartVariant } from "../model/types"
 
 export type ChartCardProps<TData extends Record<string, unknown>> = {
   title: string
-  variant?: "donut" | "bar"
+  variant?: ChartVariant
   data: TData[]
   valueKey: Extract<keyof TData, string>
   categoryKey: Extract<keyof TData, string>
@@ -90,6 +104,51 @@ export function ChartCard<TData extends Record<string, unknown>>({
                 radius={8}
               />
             </BarChart>
+          )}
+          {variant === "area" && (
+            <AreaChart
+              accessibilityLayer
+              data={coloredChartData}
+              margin={{
+                left: 12,
+                right: 12,
+              }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey={categoryKey}
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="line" />}
+              />
+              <Area
+                dataKey={valueKey}
+                type="natural"
+                fill={`var(--color-${valueKey})`}
+                fillOpacity={0.4}
+                stroke={`var(--color-${valueKey})`}
+              />
+            </AreaChart>
+          )}
+          {variant === "radar" && (
+            <RadarChart data={coloredChartData}>
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent />}
+              />
+              <PolarAngleAxis dataKey={categoryKey} />
+              <PolarGrid />
+              <Radar
+                dataKey={valueKey}
+                fill={`var(--color-${valueKey})`}
+                fillOpacity={0.6}
+              />
+            </RadarChart>
           )}
         </ChartContainer>
       </CardContent>
