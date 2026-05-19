@@ -1,3 +1,4 @@
+import { Button } from "@/base/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/base/ui/card"
 import {
   ChartContainer,
@@ -5,41 +6,46 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-  type ChartConfig,
 } from "@/base/ui/chart"
+import { buildChartConfig } from "../lib/build-chart-config"
+import { buildChartData } from "../lib/build-chart-data"
+import { SettingsIcon } from "lucide-react"
 import { useMemo } from "react"
 import { Bar, BarChart, CartesianGrid, Pie, PieChart, XAxis } from "recharts"
-import type { ChartData } from "recharts/types/state/chartDataSlice"
 
-type Props<TData extends Record<string, unknown>> = {
+export type ChartCardProps<TData extends Record<string, unknown>> = {
   title: string
   variant?: "donut" | "bar"
-  chartConfig: ChartConfig
-  chartData: ChartData<TData>
-  dataKey: Extract<keyof TData, string>
-  nameKey: Extract<keyof TData, string>
+  data: TData[]
+  valueKey: Extract<keyof TData, string>
+  categoryKey: Extract<keyof TData, string>
 }
-export function DataChart<TData extends Record<string, unknown>>({
+
+export function ChartCard<TData extends Record<string, unknown>>({
   title,
   variant = "bar",
-  chartConfig,
-  chartData,
-  dataKey,
-  nameKey,
-}: Props<TData>) {
-  const chartDataWithFill = useMemo(
-    () =>
-      chartData.map((d) => {
-        if (variant === "bar") return { ...d, fill: `var(--color-${dataKey})` }
-        return { ...d, fill: `var(--color-${d[nameKey]})` }
-      }),
-    [dataKey, nameKey, variant, chartData]
+  data,
+  valueKey,
+  categoryKey,
+}: ChartCardProps<TData>) {
+  const chartConfig = useMemo(
+    () => buildChartConfig(data, valueKey, categoryKey),
+    [data, valueKey, categoryKey]
+  )
+
+  const coloredChartData = useMemo(
+    () => buildChartData(data, variant, valueKey, categoryKey),
+    [categoryKey, valueKey, variant, data]
   )
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex items-center justify-between">
         <CardTitle>{title}</CardTitle>
+
+        <Button variant="outline" size="icon">
+          <SettingsIcon />
+        </Button>
       </CardHeader>
       <CardContent>
         <ChartContainer
@@ -53,22 +59,22 @@ export function DataChart<TData extends Record<string, unknown>>({
                 content={<ChartTooltipContent hideLabel />}
               />
               <Pie
-                data={chartDataWithFill}
-                dataKey={dataKey}
-                nameKey={nameKey}
+                data={coloredChartData}
+                dataKey={valueKey}
+                nameKey={categoryKey}
                 innerRadius={60}
               />
               <ChartLegend
-                content={<ChartLegendContent nameKey={nameKey} />}
+                content={<ChartLegendContent nameKey={categoryKey} />}
                 className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
               />
             </PieChart>
           )}
           {variant === "bar" && (
-            <BarChart accessibilityLayer data={chartDataWithFill}>
+            <BarChart accessibilityLayer data={coloredChartData}>
               <CartesianGrid vertical={false} />
               <XAxis
-                dataKey={nameKey}
+                dataKey={categoryKey}
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
@@ -78,7 +84,7 @@ export function DataChart<TData extends Record<string, unknown>>({
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}
               />
-              <Bar dataKey={dataKey} fill="var(--chart-1)" radius={8} />
+              <Bar dataKey={valueKey} fill="var(--chart-1)" radius={8} />
             </BarChart>
           )}
         </ChartContainer>

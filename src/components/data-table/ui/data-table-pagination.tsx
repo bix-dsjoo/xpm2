@@ -6,11 +6,13 @@ import { MoveLeftIcon, MoveRightIcon } from "lucide-react"
 type DataTablePaginationProps = {
   pagination: PaginationMeta
   onPageChange: (page: number) => void
+  disabled?: boolean
 }
 
 export function DataTablePagination({
   pagination,
   onPageChange,
+  disabled,
 }: DataTablePaginationProps) {
   const currentPage = pagination.totalPages === 0 ? 0 : pagination.page
   const canGoPrevious = pagination.page > 1 && pagination.totalPages > 0
@@ -21,7 +23,7 @@ export function DataTablePagination({
     <ButtonGroup>
       <Button
         variant="outline"
-        disabled={!canGoPrevious}
+        disabled={disabled || !canGoPrevious}
         onClick={() => onPageChange(pagination.page - 1)}
         aria-label="Previous page"
       >
@@ -34,7 +36,7 @@ export function DataTablePagination({
 
       <Button
         variant="outline"
-        disabled={!canGoNext}
+        disabled={disabled || !canGoNext}
         onClick={() => onPageChange(pagination.page + 1)}
         aria-label="Next page"
       >

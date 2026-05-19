@@ -14,11 +14,13 @@ import { PAGE_SIZE_OPTIONS } from "@/base/model/pagination"
 type DataTablePageSizeSelectProps = {
   pageSize: number
   onPageSizeChange: (pageSize: number) => void
+  disabled?: boolean
 }
 
 export function DataTablePageSizeSelect({
   pageSize,
   onPageSizeChange,
+  disabled,
 }: DataTablePageSizeSelectProps) {
   const [open, setOpen] = useState(false)
 
@@ -29,6 +31,7 @@ export function DataTablePageSizeSelect({
         onValueChange={(value) => onPageSizeChange(Number(value))}
         open={open}
         onOpenChange={setOpen}
+        disabled={disabled}
       >
         <SelectTrigger>
           <SelectValue />
@@ -48,6 +51,7 @@ export function DataTablePageSizeSelect({
       <Button
         className="text-xs font-normal"
         variant="outline"
+        disabled={disabled}
         onClick={() => setOpen(true)}
       >
         Per Page

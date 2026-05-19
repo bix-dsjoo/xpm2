@@ -1,5 +1,5 @@
-import { ChartPieDonut } from "./devices-page-chart-pie-donut"
-import { ChartBarDefault } from "./devices-page-chart-bar-default"
+import { DeviceTypeChart } from "./devices-page-device-type-chart"
+import { LastStateUpdateChart } from "./devices-page-last-state-update-chart"
 import { DevicesPageTable } from "./devices-page-table"
 
 export const DevicesPage = () => {
@@ -8,8 +8,8 @@ export const DevicesPage = () => {
       <h1 className="font-medium">Devices</h1>
 
       <div className="flex gap-4">
-        <ChartPieDonut />
-        <ChartBarDefault />
+        <DeviceTypeChart />
+        <LastStateUpdateChart />
       </div>
 
       <DevicesPageTable />

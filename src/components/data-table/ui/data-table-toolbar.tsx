@@ -34,6 +34,7 @@ export function DataTableToolbar({
           <DataTablePageSizeSelect
             pageSize={pagination.pageSize}
             onPageSizeChange={pagination.onPageSizeChange}
+            disabled={loading}
           />
         )}
 
@@ -41,6 +42,7 @@ export function DataTableToolbar({
           <DataTablePagination
             pagination={pagination}
             onPageChange={pagination.onPageChange}
+            disabled={loading}
           />
         )}
 
@@ -51,7 +53,7 @@ export function DataTableToolbar({
           disabled={!onRefresh || loading}
           aria-label="Refresh"
         >
-          <RefreshCwIcon />
+          <RefreshCwIcon className={loading ? "animate-spin" : undefined} />
         </Button>
       </div>
 
