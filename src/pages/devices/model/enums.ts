@@ -8,18 +8,18 @@ export type DeviceComplianceStatus =
 
 export const DEVICE_COMPLIANCE_STATUS_OPTIONS: Option<DeviceComplianceStatus>[] =
   [
-    { label: "Compliant", value: "Compliant", variant: "success" },
-    { label: "Non-compliant", value: "NonCompliant", variant: "destructive" },
-    { label: "Pending", value: "Pending", variant: "warning" },
-    { label: "Not applicable", value: "NotApplicable", variant: "neutral" },
+    { label: "Compliant", value: "Compliant" },
+    { label: "Non-compliant", value: "NonCompliant" },
+    { label: "Pending", value: "Pending" },
+    { label: "Not applicable", value: "NotApplicable" },
   ]
 
 export type DeviceState = "Green" | "Yellow" | "Red" | "Gray"
 export const DEVICE_STATE_OPTIONS: Option<DeviceState>[] = [
-  { label: "Green", value: "Green", variant: "success" },
-  { label: "Yellow", value: "Yellow", variant: "warning" },
-  { label: "Red", value: "Red", variant: "destructive" },
-  { label: "Gray", value: "Gray", variant: "neutral" },
+  { label: "Green", value: "Green" },
+  { label: "Yellow", value: "Yellow" },
+  { label: "Red", value: "Red" },
+  { label: "Gray", value: "Gray" },
 ]
 
 export type DeviceConnectionStatus =
@@ -35,19 +35,16 @@ export const DEVICE_CONNECTION_STATUS_OPTIONS: Option<DeviceConnectionStatus>[] 
     {
       label: "Connection Pending",
       value: "ConnectionPending",
-      variant: "info",
     },
-    { label: "Device Offline", value: "DeviceOffline", variant: "neutral" },
-    { label: "Device Online", value: "DeviceOnline", variant: "success" },
+    { label: "Device Offline", value: "DeviceOffline" },
+    { label: "Device Online", value: "DeviceOnline" },
     {
       label: "Device Unreachable",
       value: "DeviceUnreachable",
-      variant: "destructive",
     },
     {
       label: "Gateway Not Available",
       value: "GatewayNotAvailable",
-      variant: "warning",
     },
-    { label: "Network Unknown", value: "NetworkUnknown", variant: "secondary" },
+    { label: "Network Unknown", value: "NetworkUnknown" },
   ]

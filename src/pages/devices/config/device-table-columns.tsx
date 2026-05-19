@@ -13,7 +13,10 @@ export const deviceTableColumns = [
     key: "deviceName",
     header: "DEVICE NAME",
     cell: ({ getValue }) => (
-      <Button className="px-0" variant="link">
+      <Button
+        className="px-0 font-medium text-blue-600 dark:text-blue-400"
+        variant="link"
+      >
         {getValue<string>()}
       </Button>
     ),

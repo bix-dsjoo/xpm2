@@ -1,7 +1,6 @@
 import type { ReactNode } from "react"
 
 import type { Option } from "@/base/model/types"
-import { Badge } from "@/base/ui/badge"
 
 import {
   DATA_TABLE_DEFAULT_DATE_FORMAT_OPTIONS,
@@ -110,11 +109,7 @@ function formatOptionValue(value: unknown, options?: Option[]) {
 
   const option = options.find((option) => option.value === stringValue)
 
-  return (
-    <Badge variant={option?.variant ?? "secondary"}>
-      {option?.label ?? stringValue}
-    </Badge>
-  )
+  return option?.label ?? stringValue
 }
 
 function formatArray(value: unknown) {
