@@ -1,25 +1,18 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/base/ui/card"
-import {
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/base/ui/chart"
-import { Pie, PieChart } from "recharts"
+import { type ChartConfig } from "@/base/ui/chart"
+import { DataChart } from "@/components/data-chart"
 
 const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
+  { browser: "chrome", visitors: 275 },
+  { browser: "safari", visitors: 200 },
+  { browser: "firefox", visitors: 187 },
+  { browser: "edge", visitors: 173 },
+  { browser: "other", visitors: 90 },
 ]
 
 const chartConfig = {
   visitors: {
     label: "Visitors",
+    color: "var(--chart-1)",
   },
   chrome: {
     label: "Chrome",
@@ -45,33 +38,12 @@ const chartConfig = {
 
 export const ChartPieDonut = () => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Device Type</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square h-80"
-        >
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Pie
-              data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
-              innerRadius={60}
-            />
-            <ChartLegend
-              content={<ChartLegendContent nameKey="browser" />}
-              className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
-            />
-          </PieChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+    <DataChart
+      title="DEVICE TYPE"
+      chartConfig={chartConfig}
+      chartData={chartData}
+      dataKey="visitors"
+      nameKey="browser"
+    />
   )
 }
