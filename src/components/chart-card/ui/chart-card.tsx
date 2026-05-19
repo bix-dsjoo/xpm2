@@ -34,8 +34,8 @@ export function ChartCard<TData extends Record<string, unknown>>({
   )
 
   const coloredChartData = useMemo(
-    () => buildChartData(data, variant, valueKey, categoryKey),
-    [categoryKey, valueKey, variant, data]
+    () => buildChartData(data, variant, categoryKey),
+    [categoryKey, variant, data]
   )
 
   return (
@@ -84,7 +84,11 @@ export function ChartCard<TData extends Record<string, unknown>>({
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}
               />
-              <Bar dataKey={valueKey} fill="var(--chart-1)" radius={8} />
+              <Bar
+                dataKey={valueKey}
+                fill={`var(--color-${valueKey})`}
+                radius={8}
+              />
             </BarChart>
           )}
         </ChartContainer>
