@@ -69,19 +69,11 @@ export const BarChartRenderer = <TData extends Record<string, unknown>>({
       <XAxis
         dataKey={categoryKey}
         tickLine={false}
-        tickMargin={10}
         axisLine={false}
-        tickFormatter={(value) => value.slice(0, 3)}
+        tickMargin={8}
       />
-      <ChartTooltip
-        cursor={false}
-        content={<ChartTooltipContent hideLabel />}
-      />
-      <Bar
-        dataKey={valueKey}
-        fill={`var(--color-${valueKey})`}
-        radius={8}
-      />
+      <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+      <Bar dataKey={valueKey} fill={`var(--color-${valueKey})`} radius={8} />
     </BarChart>
   )
 }
@@ -92,21 +84,13 @@ export const AreaChartRenderer = <TData extends Record<string, unknown>>({
   categoryKey,
 }: ChartRendererProps<TData>) => {
   return (
-    <AreaChart
-      accessibilityLayer
-      data={data}
-      margin={{
-        left: 12,
-        right: 12,
-      }}
-    >
+    <AreaChart accessibilityLayer data={data}>
       <CartesianGrid vertical={false} />
       <XAxis
         dataKey={categoryKey}
         tickLine={false}
         axisLine={false}
         tickMargin={8}
-        tickFormatter={(value) => value.slice(0, 3)}
       />
       <ChartTooltip
         cursor={false}

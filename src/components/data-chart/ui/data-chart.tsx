@@ -1,5 +1,3 @@
-import { Button } from "@/base/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/base/ui/card"
 import { ChartContainer } from "@/base/ui/chart"
 import { buildChartConfig } from "../lib/build-chart-config"
 import {
@@ -8,7 +6,7 @@ import {
   DonutChartRenderer,
   RadarChartRenderer,
 } from "./chart-renderers"
-import { SettingsIcon } from "lucide-react"
+
 import { useMemo } from "react"
 import type { ChartVariant } from "../model/types"
 import type { ChartRenderer } from "./chart-renderers"
@@ -20,21 +18,19 @@ const chartRenderers = {
   radar: RadarChartRenderer,
 } satisfies Record<ChartVariant, ChartRenderer>
 
-export type ChartCardProps<TData extends Record<string, unknown>> = {
-  title: string
+export type DataChartProps<TData extends Record<string, unknown>> = {
   variant?: ChartVariant
   data: TData[]
   valueKey: Extract<keyof TData, string>
   categoryKey: Extract<keyof TData, string>
 }
 
-export function ChartCard<TData extends Record<string, unknown>>({
-  title,
+export function DataChart<TData extends Record<string, unknown>>({
   variant = "bar",
   data,
   valueKey,
   categoryKey,
-}: ChartCardProps<TData>) {
+}: DataChartProps<TData>) {
   const ChartRenderer = chartRenderers[variant]
 
   const chartConfig = useMemo(
@@ -43,26 +39,12 @@ export function ChartCard<TData extends Record<string, unknown>>({
   )
 
   return (
-    <Card>
-      <CardHeader className="flex items-center justify-between">
-        <CardTitle>{title}</CardTitle>
-
-        <Button variant="outline" size="icon">
-          <SettingsIcon />
-        </Button>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square h-80"
-        >
-          <ChartRenderer
-            data={data}
-            valueKey={valueKey}
-            categoryKey={categoryKey}
-          />
-        </ChartContainer>
-      </CardContent>
-    </Card>
+    <ChartContainer config={chartConfig} className="mx-auto aspect-square h-80">
+      <ChartRenderer
+        data={data}
+        valueKey={valueKey}
+        categoryKey={categoryKey}
+      />
+    </ChartContainer>
   )
 }
